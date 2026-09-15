@@ -16,15 +16,15 @@
 
 ---
 
-## 📖 Descripción
+## Descripción
 
 Aplicación de escritorio desarrollada en **Python** para gestionar libros, usuarios, préstamos y devoluciones en **tres bibliotecas independientes**. Cada biblioteca funciona como un nodo autónomo con su propia base de datos **SQL Server**, y los nodos se comunican mediante **gRPC/RPC**. Incluye un **módulo de Inteligencia Artificial** que permite consultar la disponibilidad de libros usando lenguaje natural, respondiendo solo con datos reales obtenidos de las bases de datos.
 
-## 🎯 Problema
+## Problema
 
 Buscar libros en varias bibliotecas puede ser lento e ineficiente, y no existe una forma sencilla de consultar la disponibilidad en tiempo real. Esto dificulta la experiencia de los usuarios y hace compleja la gestión manual de las bibliotecas.
 
-## 🚀 Objetivos
+## Objetivos
 
 **General:** Desarrollar un sistema distribuido de escritorio que gestione los recursos de tres bibliotecas y use IA para facilitar la búsqueda de libros mediante preguntas en lenguaje natural.
 
@@ -34,32 +34,32 @@ Buscar libros en varias bibliotecas puede ser lento e ineficiente, y no existe u
 - Integrar un módulo de IA para consultas en lenguaje natural.
 - Garantizar la integridad de la información con transacciones y propiedades ACID.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 | Módulo | Descripción |
 |--------|-------------|
-| 📘 **Gestión bibliotecaria** | CRUD de libros, usuarios, préstamos y devoluciones |
-| 🤖 **Consultas con IA** | Preguntas en lenguaje natural sobre las tres bibliotecas |
-| 🔄 **Sincronización** | Intercambio de información entre nodos en tiempo real |
-| 📊 **Disponibilidad y reportes** | Control de inventario y generación de reportes |
-| 🔒 **Transacciones** | Préstamos y devoluciones con garantías ACID |
+| **Gestión bibliotecaria** | CRUD de libros, usuarios, préstamos y devoluciones |
+| **Consultas con IA** | Preguntas en lenguaje natural sobre las tres bibliotecas |
+| **Sincronización** | Intercambio de información entre nodos en tiempo real |
+| **Disponibilidad y reportes** | Control de inventario y generación de reportes |
+| **Transacciones** | Préstamos y devoluciones con garantías ACID |
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```mermaid
 flowchart LR
-    A[🖥️ Aplicación de escritorio<br/>Python] --> B[🧠 Servicio de IA]
+    A[ Aplicación de escritorio<br/>Python] --> B[ Servicio de IA]
     B --> C{gRPC / RPC}
-    C --> D[📚 Biblioteca 1] --> G[(SQL Server)]
-    C --> E[📚 Biblioteca 2] --> H[(SQL Server)]
-    C --> F[📚 Biblioteca 3] --> I[(SQL Server)]
+    C --> D[ Biblioteca 1] --> G[(SQL Server)]
+    C --> E[ Biblioteca 2] --> H[(SQL Server)]
+    C --> F[ Biblioteca 3] --> I[(SQL Server)]
 ```
 
 - **Nodos independientes:** cada biblioteca gestiona su propio inventario, usuarios, préstamos y disponibilidad.
 - **Comunicación:** gRPC/RPC, un protocolo eficiente y seguro entre servicios.
 - **Persistencia:** una base de datos SQL Server por nodo.
 
-## 🔐 Operaciones CRUD y propiedades ACID
+##  Operaciones CRUD y propiedades ACID
 
 | CRUD | | ACID | |
 |------|---|------|---|
@@ -98,7 +98,7 @@ source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## ▶️ Ejecución
+## Ejecución
 
 ```bash
 # 1. Iniciar los nodos de cada biblioteca
@@ -110,19 +110,19 @@ python servidor.py --nodo 3
 python main.py
 ```
 
-> ⚠️ Configura la cadena de conexión de cada instancia de SQL Server en el archivo de configuración antes de ejecutar.
+> Configura la cadena de conexión de cada instancia de SQL Server en el archivo de configuración antes de ejecutar.
 
-## 📌 Resultado esperado
+## Resultado esperado
 
 Un sistema funcional, distribuido y seguro que permita gestionar tres bibliotecas y realizar consultas inteligentes de libros en lenguaje natural.
 
-## 🎓 Información académica
+## Información académica
 
 | Universidad | Programa | Nivel | Modalidad |
 |-------------|----------|-------|-----------|
 | Universidad Manuela Beltrán | Ingeniería de Software | 7° Semestre | Presencial |
 
-## 👨‍💻 Autores
+## Autores
 
 - **Nombre del autor** – [@Felipe Villaquiran](https://github.com/pipeeex)
 - [@Alejandro Mier](https://github.com/Cachureto)
@@ -131,5 +131,5 @@ Un sistema funcional, distribuido y seguro que permita gestionar tres biblioteca
 ---
 
 <div align="center">
-<sub>Desarrollado con 💙 en Python · Universidad Manuela Beltrán</sub>
+<sub>Desarrollado con 💙 en Python · Grupo 6 </sub>
 </div>
