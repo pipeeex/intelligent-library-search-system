@@ -118,7 +118,7 @@ Un sistema funcional, distribuido y seguro que permita gestionar tres biblioteca
 - **Nombre del autor**
 - [@Felipe Villaquiran](https://github.com/pipeeex)
 - [@Alejandro Mier](https://github.com/Cachureto)
-- [@Gabriel Badillo](https://github.com/gabrielbadillo)
+- [@Gabriel Badillo](https://github.com/gabrielbadillo123)
 
 ---
 
