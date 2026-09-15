@@ -24,15 +24,6 @@ Aplicación de escritorio desarrollada en **Python** para gestionar libros, usua
 
 Buscar libros en varias bibliotecas puede ser lento e ineficiente, y no existe una forma sencilla de consultar la disponibilidad en tiempo real. Esto dificulta la experiencia de los usuarios y hace compleja la gestión manual de las bibliotecas.
 
-## Objetivos
-
-**General:** Desarrollar un sistema distribuido de escritorio que gestione los recursos de tres bibliotecas y use IA para facilitar la búsqueda de libros mediante preguntas en lenguaje natural.
-
-**Específicos:**
-- Implementar la gestión de libros, usuarios, préstamos y devoluciones.
-- Desarrollar la comunicación entre nodos mediante gRPC/RPC.
-- Integrar un módulo de IA para consultas en lenguaje natural.
-- Garantizar la integridad de la información con transacciones y propiedades ACID.
 
 ## Funcionalidades
 
@@ -87,8 +78,8 @@ flowchart LR
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/<usuario>/<repositorio>.git
-cd <repositorio>
+git clone https://github.com/pipeeex/intelligent-library-search-system.git
+cd intelligent-library-search-system
 
 # Crear y activar entorno virtual
 python -m venv venv
