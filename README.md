@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📚 Sistema Distribuido de Consulta Inteligente de Libros
+# Sistema Distribuido de Consulta Inteligente de Libros
 
 **Gestión bibliotecaria distribuida en tres nodos con consultas en lenguaje natural mediante IA**
 
@@ -68,7 +68,7 @@ flowchart LR
 | **Update** | Modificar información y disponibilidad | **Aislamiento** | Evita interferencias entre transacciones |
 | **Delete** | Eliminar o desactivar registros | **Durabilidad** | Asegura los cambios |
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 - **Lenguaje:** Python
 - **Interfaz gráfica:** Tkinter / PyQt
@@ -77,13 +77,13 @@ flowchart LR
 - **IA:** Módulo de procesamiento de lenguaje natural en Python
 - **IDE:** Visual Studio Code / PyCharm
 
-## 👥 Usuarios del sistema
+## Usuarios del sistema
 
 - **Administradores:** configuración y control general del sistema.
 - **Bibliotecarios:** gestión de inventario, préstamos y devoluciones.
 - **Usuarios:** estudiantes y público en general que consultan libros.
 
-## ⚙️ Instalación
+## Instalación
 
 ```bash
 # Clonar el repositorio
