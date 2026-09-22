@@ -1,12 +1,12 @@
 /* ============================================================
    SISTEMA DISTRIBUIDO DE CONSULTA INTELIGENTE DE LIBROS
    Base de datos para un nodo bibliotecario
-   Tecnología: Microsoft SQL Server
+   Tecnologia: Microsoft SQL Server
    ============================================================ */
 
 
 /* ============================================================
-   1. CREACIÓN DE LA BASE DE DATOS
+   1. CREACION DE LA BASE DE DATOS
    ============================================================ */
 
 IF DB_ID('BibliotecaDB') IS NOT NULL
@@ -23,7 +23,7 @@ GO
 
 
 /* ============================================================
-   2. CREACIÓN DE LA TABLA BIBLIOTECA
+   2. CREACION DE LA TABLA BIBLIOTECA
    ============================================================ */
 
 CREATE TABLE Biblioteca (
@@ -42,7 +42,7 @@ GO
 
 
 /* ============================================================
-   3. CREACIÓN DE LA TABLA LIBRO
+   3. CREACION DE LA TABLA LIBRO
    ============================================================ */
 
 CREATE TABLE Libro (
@@ -69,7 +69,7 @@ GO
 
 
 /* ============================================================
-   4. CREACIÓN DE LA TABLA USUARIO
+   4. CREACION DE LA TABLA USUARIO
    ============================================================ */
 
 CREATE TABLE Usuario (
@@ -89,7 +89,7 @@ GO
 
 
 /* ============================================================
-   5. CREACIÓN DE LA TABLA EJEMPLAR
+   5. CREACION DE LA TABLA EJEMPLAR
    ============================================================ */
 
 CREATE TABLE Ejemplar (
@@ -127,7 +127,7 @@ GO
 
 
 /* ============================================================
-   6. CREACIÓN DE LA TABLA PRESTAMO
+   6. CREACION DE LA TABLA PRESTAMO
    ============================================================ */
 
 CREATE TABLE Prestamo (
@@ -165,7 +165,7 @@ GO
 
 
 /* ============================================================
-   7. CREACIÓN DE LA TABLA DEVOLUCION
+   7. CREACION DE LA TABLA DEVOLUCION
    ============================================================ */
 
 CREATE TABLE Devolucion (
@@ -188,7 +188,7 @@ GO
 
 
 /* ============================================================
-   8. CREACIÓN DE LA TABLA CONSULTA
+   8. CREACION DE LA TABLA CONSULTA
    ============================================================ */
 
 CREATE TABLE Consulta (
@@ -206,7 +206,7 @@ GO
 
 
 /* ============================================================
-   9. CREACIÓN DE LA TABLA RESULTADO_CONSULTA
+   9. CREACION DE LA TABLA RESULTADO_CONSULTA
    ============================================================ */
 
 CREATE TABLE Resultado_Consulta (
@@ -235,19 +235,19 @@ GO
 
 
 /* ============================================================
-   10. INSERCIÓN INICIAL DE LAS BIBLIOTECAS
+   10. INSERCION INICIAL DE LAS BIBLIOTECAS
    ============================================================ */
 
 INSERT INTO Biblioteca (nombre, direccion, estado)
 VALUES
-    ('Biblioteca 1', 'Dirección Biblioteca 1', 'ACTIVA'),
-    ('Biblioteca 2', 'Dirección Biblioteca 2', 'ACTIVA'),
-    ('Biblioteca 3', 'Dirección Biblioteca 3', 'ACTIVA');
+    ('Biblioteca 1', 'Direcciï¿½n Biblioteca 1', 'ACTIVA'),
+    ('Biblioteca 2', 'Direcciï¿½n Biblioteca 2', 'ACTIVA'),
+    ('Biblioteca 3', 'Direcciï¿½n Biblioteca 3', 'ACTIVA');
 GO
 
 
 /* ============================================================
-   11. CONSULTA DE VERIFICACIÓN
+   11. CONSULTA DE VERIFICACIï¿½N
    ============================================================ */
 
 SELECT * FROM Biblioteca;
