@@ -68,6 +68,15 @@ flowchart LR
 - **IA:** Módulo de procesamiento de lenguaje natural en Python
 - **IDE:** Visual Studio Code / PyCharm
 
+## Base de Datos
+El script adjuntado de SQL puede utilizarse como estructura base para cada nodo. En una fase de implementación se podrían crear:
+
+- CREATE DATABASE Biblioteca1DB;
+- CREATE DATABASE Biblioteca2DB;
+- CREATE DATABASE Biblioteca3DB;
+
+y aplicar a cada una la estructura correspondiente, manteniendo cada biblioteca como una unidad independiente.
+
 ## Usuarios del sistema
 
 - **Administradores:** configuración y control general del sistema.
