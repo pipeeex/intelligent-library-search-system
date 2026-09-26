@@ -9,19 +9,18 @@
    1. CREACION DE LA BASE DE DATOS
    ============================================================ */
 
-DROP DATABASE BibliotecaDB2
 
 
-IF DB_ID('BibliotecaDB3') IS NOT NULL
+IF DB_ID('Biblioteca2DB') IS NOT NULL
 BEGIN
-    DROP DATABASE BibliotecaDB3;
+    DROP DATABASE Biblioteca2DB;
 END;
 GO
 
-CREATE DATABASE BibliotecaDB3;
+CREATE DATABASE Biblioteca2DB;
 GO
 
-USE BibliotecaDB3;
+USE Biblioteca1DB;
 GO
 
 
@@ -236,8 +235,13 @@ CREATE TABLE Resultado_Consulta (
 );
 GO
 
-
-
+use Biblioteca1DB
+INSERT INTO Biblioteca (nombre, direccion, estado)
+VALUES
+    ('Biblioteca 1', 'Direcci�n Biblioteca 1', 'ACTIVA'),
+    ('Biblioteca 2', 'Direcci�n Biblioteca 2', 'ACTIVA'),
+    ('Biblioteca 3', 'Direcci�n Biblioteca 3', 'ACTIVA');
+GO
 
 
 /* ============================================================
