@@ -1,0 +1,257 @@
+syntax = "proto3";
+
+package biblioteca;
+
+// ============================================================
+// Contrato gRPC de un nodo bibliotecario.
+// Los tres nodos exponen exactamente este mismo servicio; la
+// aplicacion de escritorio (y el modulo de IA) consultan a los
+// tres y agregan los resultados.
+// ============================================================
+
+service BibliotecaNodo {
+  // --- Salud / metadatos del nodo ---
+  rpc Ping (PingRequest) returns (PingResponse);
+
+  // --- Libros (CRUD) ---
+  rpc CrearLibro     (CrearLibroRequest)     returns (LibroResponse);
+  rpc ObtenerLibro   (IdRequest)             returns (LibroResponse);
+  rpc ListarLibros   (ListarRequest)         returns (ListaLibrosResponse);
+  rpc BuscarLibros   (BuscarLibrosRequest)   returns (ListaLibrosResponse);
+  rpc ActualizarLibro(ActualizarLibroRequest)returns (LibroResponse);
+  rpc EliminarLibro  (IdRequest)             returns (OperacionResponse);
+
+  // --- Disponibilidad (base del modulo de IA) ---
+  rpc ConsultarDisponibilidad (DisponibilidadRequest) returns (DisponibilidadResponse);
+
+  // --- Ejemplares ---
+  rpc CrearEjemplar          (CrearEjemplarRequest)  returns (EjemplarResponse);
+  rpc ListarEjemplares       (ListarEjemplaresRequest) returns (ListaEjemplaresResponse);
+  rpc CambiarEstadoEjemplar  (EstadoEjemplarRequest) returns (EjemplarResponse);
+
+  // --- Usuarios (CRUD) ---
+  rpc CrearUsuario     (CrearUsuarioRequest)      returns (UsuarioResponse);
+  rpc ObtenerUsuario   (IdRequest)                returns (UsuarioResponse);
+  rpc ListarUsuarios   (ListarRequest)            returns (ListaUsuariosResponse);
+  rpc ActualizarUsuario(ActualizarUsuarioRequest) returns (UsuarioResponse);
+  rpc EliminarUsuario  (IdRequest)                returns (OperacionResponse);
+
+  // --- Prestamos y devoluciones (transaccionales) ---
+  rpc RegistrarPrestamo   (PrestamoRequest)        returns (PrestamoResponse);
+  rpc RegistrarDevolucion (DevolucionRequest)      returns (DevolucionResponse);
+  rpc ListarPrestamos     (ListarPrestamosRequest) returns (ListaPrestamosResponse);
+}
+
+// ============================================================
+// Mensajes comunes
+// ============================================================
+
+message IdRequest {
+  int32 id = 1;
+}
+
+message ListarRequest {
+  int32 limite = 1; // 0 => valor por defecto del servidor
+}
+
+message OperacionResponse {
+  bool   exito   = 1;
+  string mensaje = 2;
+}
+
+message PingRequest {}
+
+message PingResponse {
+  int32  nodo            = 1;
+  string nombre          = 2;
+  bool   base_datos_ok   = 3;
+  string version         = 4;
+}
+
+// ============================================================
+// Libro
+// ============================================================
+
+message Libro {
+  int32  id_libro         = 1;
+  string isbn             = 2;
+  string titulo           = 3;
+  string autor            = 4;
+  string editorial        = 5;
+  int32  anio_publicacion = 6;
+}
+
+message CrearLibroRequest {
+  string isbn             = 1;
+  string titulo           = 2;
+  string autor            = 3;
+  string editorial        = 4;
+  int32  anio_publicacion = 5;
+}
+
+message ActualizarLibroRequest {
+  Libro libro = 1;
+}
+
+message LibroResponse {
+  Libro libro = 1;
+}
+
+message ListaLibrosResponse {
+  repeated Libro libros = 1;
+  int32 nodo            = 2;
+}
+
+message BuscarLibrosRequest {
+  string titulo = 1;
+  string autor  = 2;
+  string isbn   = 3;
+  int32  limite = 4;
+}
+
+// ============================================================
+// Disponibilidad
+// ============================================================
+
+message DisponibilidadRequest {
+  string titulo = 1;
+  string autor  = 2;
+  string isbn   = 3;
+  int32  limite = 4;
+}
+
+message DisponibilidadItem {
+  int32  id_libro         = 1;
+  string isbn             = 2;
+  string titulo           = 3;
+  string autor            = 4;
+  int32  total_ejemplares = 5;
+  int32  disponibles      = 6;
+  int32  prestados        = 7;
+  int32  nodo             = 8;
+  string biblioteca       = 9;
+}
+
+message DisponibilidadResponse {
+  repeated DisponibilidadItem resultados = 1;
+  int32  nodo       = 2;
+  string biblioteca = 3;
+}
+
+// ============================================================
+// Ejemplar
+// ============================================================
+
+message Ejemplar {
+  int32  id_ejemplar       = 1;
+  int32  id_libro          = 2;
+  int32  id_biblioteca     = 3;
+  string codigo_inventario = 4;
+  string estado            = 5;
+  string titulo            = 6;
+  string autor             = 7;
+}
+
+message CrearEjemplarRequest {
+  int32  id_libro          = 1;
+  int32  id_biblioteca     = 2;
+  string codigo_inventario = 3;
+  string estado            = 4; // por defecto DISPONIBLE
+}
+
+message ListarEjemplaresRequest {
+  int32 id_libro         = 1;
+  bool  solo_disponibles = 2;
+}
+
+message EstadoEjemplarRequest {
+  int32  id_ejemplar = 1;
+  string estado      = 2;
+}
+
+message EjemplarResponse {
+  Ejemplar ejemplar = 1;
+}
+
+message ListaEjemplaresResponse {
+  repeated Ejemplar ejemplares = 1;
+}
+
+// ============================================================
+// Usuario
+// ============================================================
+
+message Usuario {
+  int32  id_usuario = 1;
+  string nombre     = 2;
+  string documento  = 3;
+  string correo     = 4;
+  string telefono   = 5;
+}
+
+message CrearUsuarioRequest {
+  string nombre    = 1;
+  string documento = 2;
+  string correo    = 3;
+  string telefono  = 4;
+}
+
+message ActualizarUsuarioRequest {
+  Usuario usuario = 1;
+}
+
+message UsuarioResponse {
+  Usuario usuario = 1;
+}
+
+message ListaUsuariosResponse {
+  repeated Usuario usuarios = 1;
+}
+
+// ============================================================
+// Prestamo / Devolucion
+// ============================================================
+
+message Prestamo {
+  int32  id_prestamo       = 1;
+  int32  id_usuario        = 2;
+  int32  id_ejemplar       = 3;
+  string fecha_prestamo    = 4; // ISO-8601
+  string fecha_vencimiento = 5; // ISO-8601
+  string estado            = 6;
+}
+
+message PrestamoRequest {
+  int32 id_usuario = 1;
+  int32 id_libro   = 2;
+  int32 dias       = 3; // 0 => valor por defecto del servidor
+}
+
+message PrestamoResponse {
+  Prestamo prestamo = 1;
+}
+
+message DevolucionRequest {
+  int32  id_prestamo = 1;
+  string observacion = 2;
+}
+
+message Devolucion {
+  int32  id_devolucion    = 1;
+  int32  id_prestamo      = 2;
+  string fecha_devolucion = 3; // ISO-8601
+  string observacion      = 4;
+}
+
+message DevolucionResponse {
+  Devolucion devolucion = 1;
+}
+
+message ListarPrestamosRequest {
+  int32 id_usuario   = 1;
+  bool  solo_activos = 2;
+}
+
+message ListaPrestamosResponse {
+  repeated Prestamo prestamos = 1;
+}
