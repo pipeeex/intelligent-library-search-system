@@ -69,7 +69,7 @@ flowchart LR
 - **IDE:** Visual Studio Code / PyCharm
 
 ## Base de Datos
-El script adjuntado de SQL puede utilizarse como estructura base para cada nodo. En una fase de implementación se podrían crear:
+El script adjuntado de SQL puede utilizarse como estructura base para cada nodo. Posteriormente se procede a crear:
 
 - CREATE DATABASE Biblioteca1DB;
 - CREATE DATABASE Biblioteca2DB;
