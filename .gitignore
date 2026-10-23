@@ -1,1 +1,15 @@
+# Entorno
+.env
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Stubs generados por protoc (se regeneran con tools/generar_protos.py)
+grpc_service/generated/
 Claude outputs/
+
+Arquitectura_por_capas.md
