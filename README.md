@@ -165,11 +165,18 @@ python herramientas/probar_flujo.py --nodo 1    # ciclo préstamo-devolución en
 
 ## Base de datos
 
-El script `SQLQuery_BibliotecasDB.sql` contiene la estructura de un nodo. Hay que ejecutarlo tres veces, cambiando el nombre de la base en `CREATE DATABASE` y `USE`:
+Hay dos scripts, y cada uno se ejecuta **tres veces**, una por nodo. En ambos, el nombre de la base aparece en líneas marcadas con `<<< CAMBIAR AQUI`:
+
+| Script | Qué hace |
+|---|---|
+| `SQLQuery_BibliotecasDB.sql` | Crea la base de datos, las 8 tablas con sus restricciones e índices, y la ficha de las tres sedes. |
+| `SQLQuery_DatosPrueba.sql` | Carga 5 lectores y el catálogo que le corresponde a esa sede, con sus ejemplares. |
 
 ```sql
-Biblioteca1DB     Biblioteca2DB     Biblioteca3DB
+1ª ejecución →  Biblioteca1DB      2ª →  Biblioteca2DB      3ª →  Biblioteca3DB
 ```
+
+El script de datos produce exactamente lo mismo que `python herramientas/cargar_datos.py --nodo N`, así que basta con usar uno de los dos caminos. Ninguno de los dos duplica registros si se vuelve a ejecutar.
 
 Cada base mantiene su propia tabla `Usuario`, así que los códigos de usuario se repiten entre sedes y **no corresponden a la misma persona**. Un préstamo solo puede registrarse a un lector inscrito en esa biblioteca.
 
@@ -195,9 +202,13 @@ source venv/bin/activate       # Linux o macOS
 
 pip install -r requirements.txt
 
-copy .env.example .env         # y ajustar DB_SERVER y el driver ODBC
+copy .env.example .env         # Windows   (cp en Linux o macOS)
 python herramientas/generar_protos.py
 ```
+
+El archivo `.env` queda **fuera del repositorio** a propósito: cada integrante tiene su propia instancia de SQL Server, y las credenciales no se publican. `.env.example` trae todas las variables con su explicación; hay que ajustar al menos `DB_SERVER` y `DB_DRIVER`.
+
+Los archivos de `presentacion/servicios/generados/` tampoco se versionan, porque se producen a partir del contrato `.proto`. Por eso el paso `generar_protos.py` es obligatorio la primera vez.
 
 Hace falta el **ODBC Driver 17 o 18 for SQL Server**. Si algo falla en la conexión, `python herramientas/diagnostico.py` prueba las combinaciones posibles y dice qué poner en el `.env`.
 
@@ -218,6 +229,31 @@ python aplicacion.py --demo    # datos de prueba, sin backend
 ```
 
 La aplicación detecta sola si los nodos responden. Si ninguno contesta, cae a datos de prueba en memoria y lo indica en la barra inferior.
+
+### Navegación
+
+El menú lateral da acceso a las cinco secciones y marca la activa. Además:
+
+| Atajo | Acción |
+|---|---|
+| `Ctrl+1` … `Ctrl+5` | Ir a Inicio, Catálogo, Préstamos, Usuarios o Consulta IA |
+| `F5` | Recargar los datos de la sección actual |
+| `Enter` | Ejecutar la búsqueda desde cualquier caja de texto |
+
+Desde el panel de inicio hay accesos directos a las operaciones frecuentes, y se vuelve a la pantalla principal con `Ctrl+1` o desde el menú.
+
+---
+
+## Documentación y evidencias
+
+| Documento | Contenido |
+|---|---|
+| [`docs/Documento_Maestro_Fase_III.pdf`](docs/Documento_Maestro_Fase_III.pdf) | Documento maestro completo: planteamiento, estado del arte, requerimientos, arquitectura, diagramas UML, modelo relacional, diseño de la red neuronal y gestión del proyecto. |
+| [`docs/CAMBIOS_FASE_III.md`](docs/CAMBIOS_FASE_III.md) | Qué se implementó en esta fase y qué dificultades técnicas hubo que resolver. |
+| [`docs/Arquitectura_por_capas.md`](docs/Arquitectura_por_capas.md) | Detalle de la separación en capas y de la regla de dependencia. |
+| [`docs/Base_de_datos_compartida.md`](docs/Base_de_datos_compartida.md) | Cómo trabajar entre varios equipos: tres opciones con su configuración. |
+| [`docs/capturas/`](docs/capturas/) | Capturas de la interfaz y de las opciones de navegación. |
+| [`docs/evidencias/`](docs/evidencias/) | Informes fechados de la suite de pruebas transaccionales. |
 
 ---
 

@@ -1,31 +1,57 @@
 /* ============================================================
-   SISTEMA DISTRIBUIDO DE CONSULTA INTELIGENTE DE LIBROS
-   Base de datos para un nodo bibliotecario
-   Tecnologia: Microsoft SQL Server
+   SISTEMA DISTRIBUIDO DE CONSULTA INTELIGENTE DE BIBLIOTECAS
+   Script 1 de 2: estructura de la base de datos de un nodo
+   Motor: Microsoft SQL Server
+   ------------------------------------------------------------
+   COMO SE USA
+
+   Cada biblioteca es un nodo independiente con su propia base de
+   datos. Este script crea la estructura de UNA de ellas, asi que
+   hay que ejecutarlo tres veces.
+
+   En cada ejecucion cambia unicamente el nombre que aparece en el
+   bloque marcado mas abajo:
+
+        1a ejecucion ->  Biblioteca1DB
+        2a ejecucion ->  Biblioteca2DB
+        3a ejecucion ->  Biblioteca3DB
+
+   El nombre aparece dos veces seguidas y estan senaladas. Despues
+   de crear la estructura, ejecuta el script de datos de prueba
+   SQLQuery_DatosPrueba.sql sobre esa misma base.
    ============================================================ */
 
 
 /* ============================================================
    1. CREACION DE LA BASE DE DATOS
+
+   >>> CAMBIA EL NOMBRE EN LAS DOS LINEAS SENALADAS <<<
+
+   El script no borra nada: si la base ya existe, se detiene y
+   avisa, para no destruir datos de un companero por accidente.
    ============================================================ */
 
-
-
-IF DB_ID('Biblioteca2DB') IS NOT NULL
+IF DB_ID('Biblioteca1DB') IS NOT NULL      -- <<< CAMBIAR AQUI (1 de 2)
 BEGIN
-    DROP DATABASE Biblioteca2DB;
+    RAISERROR('La base de datos ya existe. Borrala a mano si quieres recrearla.', 16, 1);
+    SET NOEXEC ON;
 END;
 GO
 
-CREATE DATABASE Biblioteca2DB;
+CREATE DATABASE Biblioteca1DB;             -- <<< CAMBIAR AQUI (2 de 2)
 GO
 
-USE Biblioteca1DB;
+USE Biblioteca1DB;                         -- <<< CAMBIAR AQUI (3 de 3)
+GO
+
+PRINT 'Creando la estructura en: ' + DB_NAME();
 GO
 
 
 /* ============================================================
-   2. CREACION DE LA TABLA BIBLIOTECA
+   2. TABLA BIBLIOTECA
+   Ficha de cada sede. Las tres filas son iguales en los tres
+   nodos, de modo que un ejemplar pueda decir a que sede pertenece.
    ============================================================ */
 
 CREATE TABLE Biblioteca (
@@ -44,7 +70,9 @@ GO
 
 
 /* ============================================================
-   3. CREACION DE LA TABLA LIBRO
+   3. TABLA LIBRO
+   El titulo como obra: lo que identifica el ISBN. No confundir
+   con el ejemplar, que es la copia fisica.
    ============================================================ */
 
 CREATE TABLE Libro (
@@ -71,7 +99,10 @@ GO
 
 
 /* ============================================================
-   4. CREACION DE LA TABLA USUARIO
+   4. TABLA USUARIO
+   Los lectores de ESTA sede. Cada nodo lleva su propia tabla,
+   asi que el mismo id_usuario puede ser otra persona en otra
+   biblioteca y un lector solo recibe prestamos donde esta inscrito.
    ============================================================ */
 
 CREATE TABLE Usuario (
@@ -91,7 +122,8 @@ GO
 
 
 /* ============================================================
-   5. CREACION DE LA TABLA EJEMPLAR
+   5. TABLA EJEMPLAR
+   La copia fisica. La disponibilidad se cuenta aqui, no en Libro.
    ============================================================ */
 
 CREATE TABLE Ejemplar (
@@ -127,9 +159,15 @@ CREATE TABLE Ejemplar (
 );
 GO
 
+/* Indice de apoyo: la consulta de disponibilidad agrupa los
+   ejemplares por libro y estado, y es la operacion mas frecuente. */
+CREATE INDEX IX_Ejemplar_Libro_Estado
+    ON Ejemplar (id_libro, estado);
+GO
+
 
 /* ============================================================
-   6. CREACION DE LA TABLA PRESTAMO
+   6. TABLA PRESTAMO
    ============================================================ */
 
 CREATE TABLE Prestamo (
@@ -165,9 +203,17 @@ CREATE TABLE Prestamo (
 );
 GO
 
+/* Indice de apoyo: el control de cupo busca los prestamos activos
+   de un lector antes de autorizar uno nuevo. */
+CREATE INDEX IX_Prestamo_Usuario_Estado
+    ON Prestamo (id_usuario, estado);
+GO
+
 
 /* ============================================================
-   7. CREACION DE LA TABLA DEVOLUCION
+   7. TABLA DEVOLUCION
+   Un prestamo se devuelve una sola vez: de ahi la restriccion
+   UNIQUE sobre id_prestamo.
    ============================================================ */
 
 CREATE TABLE Devolucion (
@@ -190,7 +236,8 @@ GO
 
 
 /* ============================================================
-   8. CREACION DE LA TABLA CONSULTA
+   8. TABLA CONSULTA
+   Bitacora de lo que los usuarios preguntan al modulo de IA.
    ============================================================ */
 
 CREATE TABLE Consulta (
@@ -208,7 +255,9 @@ GO
 
 
 /* ============================================================
-   9. CREACION DE LA TABLA RESULTADO_CONSULTA
+   9. TABLA RESULTADO_CONSULTA
+   Lo que respondio cada sede a una consulta. Es la evidencia de
+   que la cifra mostrada al usuario salio de los nodos.
    ============================================================ */
 
 CREATE TABLE Resultado_Consulta (
@@ -235,25 +284,36 @@ CREATE TABLE Resultado_Consulta (
 );
 GO
 
-use Biblioteca1DB
+
+/* ============================================================
+   10. FICHA DE LAS TRES SEDES
+   Se insertan las tres en cada nodo para que id_biblioteca
+   signifique lo mismo en las tres bases de datos.
+   ============================================================ */
+
 INSERT INTO Biblioteca (nombre, direccion, estado)
 VALUES
-    ('Biblioteca 1', 'Direcci�n Biblioteca 1', 'ACTIVA'),
-    ('Biblioteca 2', 'Direcci�n Biblioteca 2', 'ACTIVA'),
-    ('Biblioteca 3', 'Direcci�n Biblioteca 3', 'ACTIVA');
+    ('Biblioteca 1', 'Sede Norte - Calle 100 No. 15-20', 'ACTIVA'),
+    ('Biblioteca 2', 'Sede Centro - Carrera 7 No. 40-53', 'ACTIVA'),
+    ('Biblioteca 3', 'Sede Sur - Avenida 68 No. 24-10', 'ACTIVA');
 GO
 
 
 /* ============================================================
-   11. CONSULTA DE VERIFICACI�N
+   11. VERIFICACION
+   Si todo salio bien, aqui se ven ocho tablas y tres bibliotecas.
    ============================================================ */
 
+PRINT 'Estructura creada en: ' + DB_NAME();
+GO
+
+SELECT TABLE_NAME AS tabla
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+ORDER BY TABLE_NAME;
+
 SELECT * FROM Biblioteca;
-SELECT * FROM Libro;
-SELECT * FROM Usuario;
-SELECT * FROM Ejemplar;
-SELECT * FROM Prestamo;
-SELECT * FROM Devolucion;
-SELECT * FROM Consulta;
-SELECT * FROM Resultado_Consulta;
+GO
+
+SET NOEXEC OFF;
 GO

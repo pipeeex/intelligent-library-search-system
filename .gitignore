@@ -1,18 +1,46 @@
 # Entorno
 .env
+.env.*
+!.env.example
 venv/
 .venv/
 
 # Python
 *.py[cod]
-*.egg-info/
-
-Claude outputs/
-# Stubs generados por protoc (se regeneran con tools/generar_protos.py)
-presentacion/servicios/generados/
-#cache
 __pycache__/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+build/
+dist/
+
+# Stubs generados por protoc
+# Se regeneran con: python herramientas/generar_protos.py
+presentacion/servicios/generados/
+
+# Editores
+.vscode/
+.idea/
+*.code-workspace
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Temporales y registros
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Respaldos y archivos de datos de SQL Server
+*.mdf
+*.ldf
+*.trn
+
+# Carpeta de trabajo, no forma parte del proyecto
+Claude outputs/
 
 
-
-Arquitectura_por_capas.md
+Base_de_datos_compartida.md
