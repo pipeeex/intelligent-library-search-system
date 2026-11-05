@@ -11,5 +11,5 @@ __pycache__/
 # Stubs generados por protoc (se regeneran con tools/generar_protos.py)
 grpc_service/generated/
 Claude outputs/
-
+presentacion\servicios\generados
 Arquitectura_por_capas.md
