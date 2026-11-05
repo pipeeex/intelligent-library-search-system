@@ -4,12 +4,15 @@ venv/
 .venv/
 
 # Python
-__pycache__/
 *.py[cod]
 *.egg-info/
 
-# Stubs generados por protoc (se regeneran con tools/generar_protos.py)
-grpc_service/generated/
 Claude outputs/
-presentacion\servicios\generados
+# Stubs generados por protoc (se regeneran con tools/generar_protos.py)
+presentacion/servicios/generados/
+#cache
+__pycache__/
+
+
+
 Arquitectura_por_capas.md
