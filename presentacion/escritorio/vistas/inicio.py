@@ -24,26 +24,50 @@ class VistaInicio(ttk.Frame):
         self.recargar()
 
     def _construir_indicadores(self) -> None:
-        fila = ttk.Frame(self, style="Fondo.TFrame")
-        fila.pack(fill="x", pady=(0, 18))
-        for i in range(4):
-            fila.columnconfigure(i, weight=1, uniform="ind")
+        self.fila_indicadores = ttk.Frame(self, style="Fondo.TFrame")
+        self.fila_indicadores.pack(fill="x", pady=(0, E.px(18)))
 
         self.indicadores = {}
+        self.tarjetas_indicadores = []
         definicion = [
             ("titulos", "Titulos en catalogo"),
             ("ejemplares", "Ejemplares registrados"),
             ("disponibles", "Ejemplares disponibles"),
             ("sedes", "Bibliotecas en linea"),
         ]
-        for columna, (clave, etiqueta) in enumerate(definicion):
-            tarjeta = Tarjeta(fila, padding=16)
-            tarjeta.ubicar(row=0, column=columna, sticky="nsew",
-                           padx=(0 if columna == 0 else 9, 0))
+        for clave, etiqueta in definicion:
+            tarjeta = Tarjeta(self.fila_indicadores, padding=E.px(16))
             valor = ttk.Label(tarjeta, text="-", style="Dato.TLabel")
             valor.pack(anchor="w")
             ttk.Label(tarjeta, text=etiqueta, style="DatoPie.TLabel").pack(anchor="w")
             self.indicadores[clave] = valor
+            self.tarjetas_indicadores.append(tarjeta.exterior)
+
+        self._columnas_indicadores = 0
+        self.fila_indicadores.bind("<Configure>", self._acomodar_indicadores)
+        self._acomodar_indicadores()
+
+    def _acomodar_indicadores(self, evento=None) -> None:
+        """Cuatro tarjetas en una fila, o dos filas de dos si no caben.
+
+        Repartidas en cuatro, en una ventana angosta cada tarjeta quedaba mas
+        estrecha que su propio texto y el rotulo se cortaba.
+        """
+        ancho = evento.width if evento is not None else self.fila_indicadores.winfo_width()
+        columnas = 4 if ancho >= E.px(700) else 2
+        if columnas == self._columnas_indicadores:
+            return
+        self._columnas_indicadores = columnas
+
+        for i in range(4):
+            self.fila_indicadores.columnconfigure(
+                i, weight=1 if i < columnas else 0,
+                uniform="ind" if i < columnas else "")
+        for indice, exterior in enumerate(self.tarjetas_indicadores):
+            f, c = divmod(indice, columnas)
+            exterior.grid(row=f, column=c, sticky="nsew",
+                          padx=(0 if c == 0 else E.px(9), 0),
+                          pady=(0 if f == 0 else E.px(9), 0))
 
     def _construir_nodos(self) -> None:
         tarjeta = Tarjeta(self, "Estado de los nodos",

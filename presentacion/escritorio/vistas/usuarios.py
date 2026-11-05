@@ -25,13 +25,15 @@ class VistaUsuarios(ttk.Frame):
         fila.pack(fill="x")
         ttk.Label(fila, text="Nombre o documento", style="Campo.TLabel"
                   ).pack(side="left", padx=(0, 12))
-        self.entrada = ttk.Entry(fila, width=36)
-        self.entrada.pack(side="left")
-        self.entrada.bind("<Return>", lambda _e: self.buscar())
-        ttk.Button(fila, text="Buscar", style="Primario.TButton",
-                   command=self.buscar).pack(side="left", padx=(12, 0))
+        # Botones primero y a la derecha: conservan su ancho natural con
+        # cualquier escalado de pantalla y la caja de texto toma el resto.
         ttk.Button(fila, text="Ver todos", style="Secundario.TButton",
-                   command=self.recargar).pack(side="left", padx=(8, 0))
+                   command=self.recargar).pack(side="right")
+        ttk.Button(fila, text="Buscar", style="Primario.TButton",
+                   command=self.buscar).pack(side="right", padx=(12, 8))
+        self.entrada = ttk.Entry(fila)
+        self.entrada.pack(side="left", fill="x", expand=True)
+        self.entrada.bind("<Return>", lambda _e: self.buscar())
 
         tarjeta = Tarjeta(self, "Listado")
         tarjeta.colocar(fill="both", expand=True)

@@ -26,13 +26,13 @@ class VistaCatalogo(ttk.Frame):
 
         ttk.Label(fila, text="Buscar por titulo, autor o ISBN",
                   style="Campo.TLabel").pack(side="left", padx=(0, 12))
-        self.entrada = ttk.Entry(fila, width=42)
-        self.entrada.pack(side="left")
-        self.entrada.bind("<Return>", lambda _e: self.buscar())
-        ttk.Button(fila, text="Buscar", style="Primario.TButton",
-                   command=self.buscar).pack(side="left", padx=(12, 0))
         ttk.Button(fila, text="Ver todo", style="Secundario.TButton",
-                   command=self.ver_todo).pack(side="left", padx=(8, 0))
+                   command=self.ver_todo).pack(side="right")
+        ttk.Button(fila, text="Buscar", style="Primario.TButton",
+                   command=self.buscar).pack(side="right", padx=(12, 8))
+        self.entrada = ttk.Entry(fila)
+        self.entrada.pack(side="left", fill="x", expand=True)
+        self.entrada.bind("<Return>", lambda _e: self.buscar())
 
         tarjeta = Tarjeta(self, "Resultados")
         tarjeta.colocar(fill="both", expand=True)

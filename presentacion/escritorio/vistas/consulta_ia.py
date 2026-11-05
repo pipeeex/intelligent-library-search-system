@@ -11,7 +11,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from presentacion.escritorio import estilos as E
-from presentacion.escritorio.componentes import Aviso, Tarjeta, encabezado
+from presentacion.escritorio.componentes import Aviso, FilaFluida, Tarjeta, encabezado
 
 EJEMPLOS = [
     "¿Tienen Cien anos de soledad?",
@@ -43,20 +43,24 @@ class VistaConsultaIA(ttk.Frame):
 
         fila = ttk.Frame(tarjeta, style="Tarjeta.TFrame")
         fila.pack(fill="x")
-        self.entrada = ttk.Entry(fila, width=60)
+        ttk.Button(fila, text="Preguntar", style="Primario.TButton",
+                   command=self.responder).pack(side="right", padx=(12, 0))
+        self.entrada = ttk.Entry(fila)
         self.entrada.pack(side="left", fill="x", expand=True)
         self.entrada.bind("<Return>", lambda _e: self.responder())
-        ttk.Button(fila, text="Preguntar", style="Primario.TButton",
-                   command=self.responder).pack(side="left", padx=(12, 0))
 
-        ejemplos = ttk.Frame(tarjeta, style="Tarjeta.TFrame")
-        ejemplos.pack(fill="x", pady=(12, 0))
-        ttk.Label(ejemplos, text="Ejemplos:", style="Ayuda.TLabel").pack(side="left")
+        # Los ejemplos van en una fila fluida: si la ventana es angosta o la
+        # pantalla agranda la letra, bajan al renglon siguiente en vez de
+        # quedar cortados contra el borde de la tarjeta.
+        ejemplos = FilaFluida(tarjeta)
+        ejemplos.pack(fill="x", pady=(E.px(12), 0))
+        ejemplos.agregar(ttk.Label(ejemplos, text="Ejemplos:", style="Ayuda.TLabel"))
         for texto in EJEMPLOS:
             enlace = tk.Label(ejemplos, text=texto, background=E.BLANCO,
-                              foreground=E.AZUL, font=E.fuente(9), cursor="hand2")
-            enlace.pack(side="left", padx=(10, 0))
+                              foreground=E.AZUL, font=E.fuente(E.TAM_AYUDA),
+                              cursor="hand2")
             enlace.bind("<Button-1>", lambda _e, t=texto: self._usar_ejemplo(t))
+            ejemplos.agregar(enlace)
 
         salida = Tarjeta(self, "Respuesta")
         salida.colocar(fill="both", expand=True)

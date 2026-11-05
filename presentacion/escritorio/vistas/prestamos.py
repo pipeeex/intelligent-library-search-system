@@ -34,16 +34,47 @@ class VistaPrestamos(ttk.Frame):
 
         self.aviso = Aviso(self)
 
-        cuerpo = ttk.Frame(self, style="Fondo.TFrame")
-        cuerpo.pack(fill="both", expand=True)
-        cuerpo.columnconfigure(0, weight=0, minsize=400)
-        cuerpo.columnconfigure(1, weight=1)
-        cuerpo.rowconfigure(0, weight=1)
+        self.cuerpo = ttk.Frame(self, style="Fondo.TFrame")
+        self.cuerpo.pack(fill="both", expand=True)
 
-        self._construir_formulario(cuerpo)
-        self._construir_panel_derecho(cuerpo)
+        self._construir_formulario(self.cuerpo)
+        self._construir_panel_derecho(self.cuerpo)
+
+        self._apilado = None
+        self.cuerpo.bind("<Configure>", self._acomodar_columnas)
+        self._acomodar_columnas()
 
         self.recargar()
+
+    def _acomodar_columnas(self, evento=None) -> None:
+        """Formulario y tabla lado a lado, o uno debajo del otro si no caben.
+
+        Con las dos columnas fijas, en una ventana angosta la tabla quedaba
+        tan estrecha que hasta su titulo se cortaba. Por debajo de cierto
+        ancho conviene apilarlas y aprovechar el desplazamiento vertical.
+        """
+        ancho = evento.width if evento is not None else self.cuerpo.winfo_width()
+        apilar = ancho < E.px(860)
+        if apilar == self._apilado:
+            return
+        self._apilado = apilar
+
+        if apilar:
+            self.cuerpo.columnconfigure(0, weight=1, minsize=0)
+            self.cuerpo.columnconfigure(1, weight=0, minsize=0)
+            self.cuerpo.rowconfigure(0, weight=0)
+            self.cuerpo.rowconfigure(1, weight=1)
+            self.tarjeta_formulario.grid(row=0, column=0, sticky="ew",
+                                         padx=0, pady=(0, E.px(16)))
+            self.columna_derecha.grid(row=1, column=0, sticky="nsew")
+        else:
+            self.cuerpo.columnconfigure(0, weight=0, minsize=E.px(400))
+            self.cuerpo.columnconfigure(1, weight=1, minsize=E.px(360))
+            self.cuerpo.rowconfigure(0, weight=1)
+            self.cuerpo.rowconfigure(1, weight=0)
+            self.tarjeta_formulario.grid(row=0, column=0, sticky="nsew",
+                                         padx=(0, E.px(18)), pady=0)
+            self.columna_derecha.grid(row=0, column=1, sticky="nsew")
 
     # ------------------------------------------------------------------
     # Construccion
@@ -51,8 +82,9 @@ class VistaPrestamos(ttk.Frame):
     def _construir_formulario(self, maestro) -> None:
         tarjeta = Tarjeta(maestro, "Datos del prestamo",
                           "El sistema verifica la disponibilidad del ejemplar y el "
-                          "cupo del usuario antes de confirmar.", wraplength=380)
-        tarjeta.ubicar(row=0, column=0, sticky="nsew", padx=(0, 18))
+                          "cupo del usuario antes de confirmar.")
+        # La posicion la decide _acomodar_columnas segun el ancho disponible.
+        self.tarjeta_formulario = tarjeta.exterior
 
         self.campo_biblioteca = CampoFormulario(
             tarjeta, "Biblioteca", control="combo", obligatorio=True, ancho=34)
@@ -92,7 +124,7 @@ class VistaPrestamos(ttk.Frame):
 
     def _construir_panel_derecho(self, maestro) -> None:
         columna = ttk.Frame(maestro, style="Fondo.TFrame")
-        columna.grid(row=0, column=1, sticky="nsew")
+        self.columna_derecha = columna
 
         tarjeta = Tarjeta(columna, "Prestamos del usuario seleccionado",
                           "Se marcan en rojo los que ya estan vencidos.")
