@@ -24,7 +24,7 @@ Aplicación de escritorio desarrollada en **Python** para gestionar libros, usua
 
 Buscar libros en varias bibliotecas puede ser lento e ineficiente, y no existe una forma sencilla de consultar la disponibilidad en tiempo real. Esto dificulta la experiencia de los usuarios y hace compleja la gestión manual de las bibliotecas.
 
-## Funcionalidades
+## Funcionalidades.
 
 | Módulo | Descripción |
 |--------|-------------|
