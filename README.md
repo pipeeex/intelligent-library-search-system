@@ -176,7 +176,7 @@ Hay dos scripts, y cada uno se ejecuta **tres veces**, una por nodo. En ambos, e
 1ª ejecución →  Biblioteca1DB      2ª →  Biblioteca2DB      3ª →  Biblioteca3DB
 ```
 
-El script de datos produce exactamente lo mismo que `python herramientas/cargar_datos.py --nodo N`, así que basta con usar uno de los dos caminos. Ninguno de los dos duplica registros si se vuelve a ejecutar.
+`SQLQuery_DatosPrueba.sql` deja el catálogo mínimo (6 libros por sede) para probar rápido. Para un catálogo real y más grande, usa `python herramientas/cargar_datos.py --nodo N` (o `--todos`): además de esos libros curados, completa cada sede hasta **200 libros** con datos reales tomados de [`datasets/libros_openlibrary.csv`](datasets/libros_openlibrary.csv) (isbn, título, autor, editorial y año reales, descargados de la [API pública de Open Library](https://openlibrary.org/dev/docs/api/search); solo la cantidad de ejemplares es inventada). Ninguno de los caminos duplica registros si se vuelve a ejecutar.
 
 Cada base mantiene su propia tabla `Usuario`, así que los códigos de usuario se repiten entre sedes y **no corresponden a la misma persona**. Un préstamo solo puede registrarse a un lector inscrito en esa biblioteca.
 
@@ -215,7 +215,12 @@ Hace falta el **ODBC Driver 17 o 18 for SQL Server**. Si algo falla en la conexi
 ## Ejecución
 
 ```bash
-# 1. Un nodo por terminal
+# 1. Los tres nodos con un solo comando (recomendado)
+python herramientas/iniciar_nodos.py
+# Ctrl+C los detiene a todos. Tambien se puede levantar solo algunos:
+python herramientas/iniciar_nodos.py --nodos 1 2
+
+# 1b. Alternativa: un nodo por terminal (si quieres ver cada log aparte)
 python servidor.py --nodo 1
 python servidor.py --nodo 2
 python servidor.py --nodo 3

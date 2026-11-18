@@ -35,7 +35,7 @@ from presentacion.escritorio.vistas.usuarios import VistaUsuarios  # noqa: E402
 
 TITULO = "Sistema Distribuido de Consulta Inteligente de Bibliotecas"
 TITULO_CORTO = "Bibliotecas UMB - Sistema distribuido"
-INTERVALO_MONITOR = 6000  # milisegundos entre revisiones del estado de los nodos
+INTERVALO_MONITOR = 2000  # milisegundos entre revisiones del estado de los nodos
 
 # Medidas del diseno, pensadas a 96 ppp. px() las traduce a la pantalla real.
 ANCHO_MENU = 236
@@ -81,7 +81,7 @@ class Aplicacion(tk.Tk):
         self.mostrar("inicio")
 
         self.protocol("WM_DELETE_WINDOW", self._cerrar)
-        self.after(1500, self._consultar_nodos)
+        self.after(300, self._consultar_nodos)
 
     # ------------------------------------------------------------------
     # Geometria

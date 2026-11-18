@@ -20,6 +20,9 @@ from presentacion.servicios.generados import biblioteca_pb2_grpc as pb_grpc
 logger = logging.getLogger(__name__)
 
 TIMEOUT = 5.0
+# El Ping es una llamada trivial: se usa un timeout corto propio para que un
+# nodo caido se detecte rapido, sin esperar lo mismo que una operacion real.
+TIMEOUT_PING = 1.5
 
 
 @dataclass
@@ -34,9 +37,15 @@ class RespuestaNodo:
 class ClienteNodo:
     """Cliente gRPC de un solo nodo."""
 
-    def __init__(self, nodo: NodoConfig, timeout: float = TIMEOUT) -> None:
+    def __init__(
+        self,
+        nodo: NodoConfig,
+        timeout: float = TIMEOUT,
+        timeout_ping: float = TIMEOUT_PING,
+    ) -> None:
         self.nodo = nodo
         self.timeout = timeout
+        self.timeout_ping = timeout_ping
         self._canal = grpc.insecure_channel(nodo.address)
         self.stub = pb_grpc.BibliotecaNodoStub(self._canal)
 
@@ -50,14 +59,14 @@ class ClienteNodo:
         self.cerrar()
 
     def ping(self):
-        return self.stub.Ping(pb.PingRequest(), timeout=self.timeout)
+        return self.stub.Ping(pb.PingRequest(), timeout=self.timeout_ping)
 
     def disponibilidad(
         self,
         titulo: str | None = None,
         autor: str | None = None,
         isbn: str | None = None,
-        limite: int = 50,
+        limite: int = 500,
     ):
         peticion = pb.DisponibilidadRequest(
             titulo=titulo or "", autor=autor or "", isbn=isbn or "", limite=limite

@@ -5,9 +5,14 @@ Uso (desde backend/, con el venv activo):
     python tools/cargar_datos.py --nodo 1
     python tools/cargar_datos.py --nodo 1 --limpiar   # borra y vuelve a cargar
 
-Cada nodo recibe un catalogo distinto, con algunos titulos repetidos entre
-bibliotecas: asi la consulta distribuida tiene algo interesante que agregar
-(el mismo libro disponible en un nodo y agotado en otro).
+Cada nodo recibe un catalogo de ~200 libros: unos pocos curados a mano
+(CATALOGOS_BASE, algunos repetidos entre bibliotecas para que la consulta
+distribuida tenga algo interesante que agregar) y el resto tomado de
+datasets/libros_openlibrary.csv, un dataset real descargado de la API
+publica de Open Library (https://openlibrary.org/dev/docs/api/search):
+libros que existen de verdad, con su isbn, titulo, autor, editorial y
+anio de publicacion. Lo unico que se inventa es la cantidad de ejemplares
+de cada libro (es un dato de inventario de la biblioteca, no bibliografico).
 
 No usa gRPC: escribe directo contra la base del nodo, asi que puedes correrlo
 con los servidores apagados.
@@ -16,6 +21,8 @@ con los servidores apagados.
 from __future__ import annotations
 
 import argparse
+import csv
+import random
 import sys
 from pathlib import Path
 
@@ -29,10 +36,13 @@ from datos.repositorios.repositorio_ejemplar import RepositorioEjemplar  # noqa:
 from datos.repositorios.repositorio_libro import RepositorioLibro  # noqa: E402
 from datos.repositorios.repositorio_usuario import RepositorioUsuario  # noqa: E402
 
+LIBROS_POR_NODO = 460
+DATASET_CSV = Path(__file__).resolve().parent.parent / "datasets" / "libros_openlibrary.csv"
+
 # ---------------------------------------------------------------------------
-# Catalogo por nodo: (isbn, titulo, autor, editorial, anio, num_ejemplares)
+# Catalogo curado por nodo: (isbn, titulo, autor, editorial, anio, num_ejemplares)
 # ---------------------------------------------------------------------------
-CATALOGOS: dict[int, list[tuple]] = {
+CATALOGOS_BASE: dict[int, list[tuple]] = {
     1: [
         ("9780307474728", "Cien anos de soledad", "Gabriel Garcia Marquez", "Vintage", 1967, 3),
         ("9788437604947", "La ciudad y los perros", "Mario Vargas Llosa", "Catedra", 1963, 2),
@@ -58,6 +68,62 @@ CATALOGOS: dict[int, list[tuple]] = {
         ("9780262033848", "Introduction to Algorithms", "Thomas H. Cormen", "MIT Press", 2009, 2),
     ],
 }
+
+
+def _leer_dataset_externo() -> list[tuple]:
+    """Lee datasets/libros_openlibrary.csv: libros reales (Open Library).
+
+    La cantidad de ejemplares no viene en el dataset (es inventario de la
+    biblioteca, no un dato bibliografico), asi que se deriva del isbn con una
+    semilla fija: siempre da el mismo numero para el mismo libro, para que
+    volver a correr el script no cambie el inventario ya cargado.
+    """
+    if not DATASET_CSV.exists():
+        return []
+    filas = []
+    with DATASET_CSV.open(encoding="utf-8", newline="") as archivo:
+        for registro in csv.DictReader(archivo):
+            isbn = registro["isbn"].strip()
+            if not isbn:
+                continue
+            cantidad = random.Random(isbn).randint(1, 5)
+            filas.append((
+                isbn,
+                registro["titulo"].strip()[:200],  # VARCHAR(200) en Libro.titulo
+                registro["autor"].strip()[:150],   # VARCHAR(150) en Libro.autor
+                registro["editorial"].strip()[:150],  # VARCHAR(150) en Libro.editorial
+                int(registro["anio"]),
+                cantidad,
+            ))
+    return filas
+
+
+def construir_catalogos(objetivo_por_nodo: int = LIBROS_POR_NODO) -> dict[int, list[tuple]]:
+    """Catalogo final por nodo: lo curado en CATALOGOS_BASE + relleno real
+    del dataset externo hasta llegar a ``objetivo_por_nodo`` libros, sin
+    repetir isbn dentro del mismo nodo.
+
+    Cada nodo tiene asignado un bloque FIJO del dataset externo (no depende
+    de ``objetivo_por_nodo``): asi, si despues se sube el objetivo, cada nodo
+    sigue tomando mas libros del principio de su propio bloque, en vez de
+    que el bloque entero se recorra y queden libros viejos sin deduplicar.
+    """
+    externos = _leer_dataset_externo()
+    cantidad_nodos = len(NODOS_VALIDOS)
+    tam_bloque = len(externos) // cantidad_nodos
+
+    catalogos: dict[int, list[tuple]] = {}
+    for indice, numero in enumerate(NODOS_VALIDOS):
+        base = list(CATALOGOS_BASE.get(numero, []))
+        usados = {fila[0] for fila in base}
+        bloque = externos[indice * tam_bloque:(indice + 1) * tam_bloque]
+        faltan = max(0, objetivo_por_nodo - len(base))
+        relleno = [fila for fila in bloque if fila[0] not in usados][:faltan]
+        catalogos[numero] = base + relleno
+    return catalogos
+
+
+CATALOGOS: dict[int, list[tuple]] = construir_catalogos()
 
 USUARIOS = [
     ("Ana Maria Torres", "1012345678", "ana.torres@example.com", "3001112233"),
@@ -152,7 +218,7 @@ def cargar(numero: int, con_limpieza: bool) -> int:
 
         existentes = len(ejemplares_repo.listar_por_libro(id_libro))
         for indice in range(existentes, cantidad):
-            codigo = f"N{numero}-{isbn[-5:]}-{indice + 1:02d}"
+            codigo = f"N{numero}-L{id_libro}-{indice + 1:02d}"
             ejemplares_repo.crear(
                 Ejemplar(
                     id_libro=id_libro,
