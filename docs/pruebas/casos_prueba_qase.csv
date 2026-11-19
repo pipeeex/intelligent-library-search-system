@@ -1,0 +1,183 @@
+﻿id,title,description,preconditions,postconditions,tags,priority,severity,type,behavior,automation,status,is_flaky,layer,steps_type,steps_actions,steps_result,steps_data,milestone_id,milestone,suite_id,suite_parent_id,suite,suite_without_cases,parameters,is_muted
+,,,,,,,,,,,,,,,,,,,,1,,Catalogo y disponibilidad,1,,
+,,,,,,,,,,,,,,,,,,,,2,,Prestamos y devoluciones,1,,
+,,,,,,,,,,,,,,,,,,,,3,,Usuarios,1,,
+,,,,,,,,,,,,,,,,,,,,4,,Consulta en lenguaje natural,1,,
+,,,,,,,,,,,,,,,,,,,,5,,Sistema distribuido y tolerancia a fallos,1,,
+,,,,,,,,,,,,,,,,,,,,6,,Interfaz y navegacion,1,,
+,,,,,,,,,,,,,,,,,,,,7,,Instalacion y compatibilidad,1,,
+,Consultar disponibilidad de un titulo por su nombre,Verifica la operacion basica de consulta del catalogo desde la interfaz.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-05,Catalogo",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Abrir la aplicacion y entrar a la seccion Catalogo.
+2. Escribir 'Clean Code' en la caja de busqueda.
+3. Pulsar Buscar.","1. La seccion muestra la tabla de resultados vacia y el buscador activo.
+2. El texto queda escrito en la caja.
+3. Se listan las filas de 'Clean Code' con una fila por sede, indicando ejemplares disponibles y totales.",,,,1,,Catalogo y disponibilidad,,,
+,Consulta distribuida a las tres bibliotecas,La consulta llega a las tres sedes y el resultado se presenta unificado. Equivale al caso automatizado PT-01.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-05,RNF-04,PT-01",high,blocker,integration,positive,automated,actual,no,e2e,classic,"1. Entrar a la seccion Catalogo.
+2. Pulsar 'Ver todo' sin escribir ningun criterio.
+3. Revisar la columna Biblioteca de la tabla.","1. La seccion queda lista para consultar.
+2. Se carga el catalogo completo.
+3. Aparecen filas de las bibliotecas 1, 2 y 3, y en ninguna fila los disponibles superan el total.",,,,1,,Catalogo y disponibilidad,,,
+,Buscar por autor,La busqueda acepta el nombre del autor ademas del titulo.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-05,Catalogo",medium,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Catalogo.
+2. Escribir 'Borges' y pulsar Buscar.","1. La seccion esta disponible.
+2. Se listan los titulos de Jorge Luis Borges presentes en las sedes 2 y 3.",,,,1,,Catalogo y disponibilidad,,,
+,Buscar por ISBN,El ISBN identifica un titulo de forma exacta.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-05,Catalogo",low,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Catalogo.
+2. Escribir '9780132350884' y pulsar Buscar.","1. La seccion esta disponible.
+2. Se listan unicamente las filas de 'Clean Code', en las sedes 1 y 2.",,,,1,,Catalogo y disponibilidad,,,
+,Una busqueda sin coincidencias se distingue de un error,"Comprueba que el sistema informa que no encontro nada, en lugar de mostrar una tabla vacia sin explicacion.",Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-05,Usabilidad",medium,normal,usability,negative,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Catalogo.
+2. Escribir 'xyzxyz' y pulsar Buscar.","1. La seccion esta disponible.
+2. La tabla queda vacia y aparece un mensaje indicando que no hubo resultados.",,,,1,,Catalogo y disponibilidad,,,
+,Un titulo agotado se distingue de un titulo inexistente,"Es la diferencia entre 'no lo tenemos' y 'lo tenemos pero esta prestado', que para el usuario no es lo mismo.",Los tres nodos estan levantados y los datos de ejemplo cargados. El titulo consultado tiene todos sus ejemplares prestados en una sede.,,"RF-05,RNF-03",high,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Prestar todos los ejemplares de un titulo en la sede 1.
+2. Entrar a la seccion Catalogo y buscar ese titulo.","1. Los prestamos quedan registrados.
+2. La fila de la sede 1 aparece con 0 disponibles y marcada en rojo, no desaparece de la tabla.",,,,1,,Catalogo y disponibilidad,,,
+,Registrar un prestamo con datos validos,Operacion principal del sistema. Equivale al caso automatizado PT-03.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-06,RNF-02,PT-03",high,blocker,functional,positive,automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos.
+2. Seleccionar la biblioteca 1.
+3. Seleccionar un lector de la lista.
+4. Seleccionar un titulo con ejemplares disponibles.
+5. Dejar los dias en 15 y pulsar 'Registrar prestamo'.","1. Se muestra el formulario con la biblioteca 1 preseleccionada.
+2. Se cargan los lectores y el catalogo de esa sede.
+3. El lector queda elegido y se muestran sus prestamos vigentes.
+4. Debajo del campo aparece cuantos ejemplares hay disponibles.
+5. Aparece el aviso verde de exito, el inventario del titulo baja en uno y el prestamo aparece en la tabla de la derecha.",,,,2,,Prestamos y devoluciones,,,
+,Registrar una devolucion,Cierra el prestamo y devuelve el ejemplar al inventario. Equivale al caso automatizado PT-04.,Los tres nodos estan levantados y los datos de ejemplo cargados. Existe un prestamo activo del lector seleccionado.,,"RF-07,RNF-02,PT-04",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos y seleccionar el lector con el prestamo activo.
+2. Seleccionar el prestamo en la tabla de la derecha.
+3. Pulsar 'Registrar devolucion'.","1. Se listan los prestamos del lector.
+2. El boton 'Registrar devolucion' se habilita.
+3. Aparece el aviso de exito, el prestamo pasa a DEVUELTO y el inventario del titulo sube en uno.",,,,2,,Prestamos y devoluciones,,,
+,El formulario rechaza los campos obligatorios vacios,La validacion ocurre antes de enviar nada a la base de datos.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,"RF-06,RNF-06",high,normal,usability,negative,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos.
+2. Sin seleccionar lector ni titulo, pulsar 'Registrar prestamo'.","1. Se muestra el formulario vacio.
+2. Los campos Usuario y Libro quedan marcados en rojo con su mensaje, aparece un aviso de error y no se registra ningun prestamo.",,,,2,,Prestamos y devoluciones,,,
+,Los dias de prestamo fuera de rango se rechazan,El rango admitido es de 1 a 30 dias.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,RF-06,medium,normal,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos y completar biblioteca, lector y titulo.
+2. Escribir 45 en el campo de dias.
+3. Pulsar 'Registrar prestamo'.","1. El formulario queda completo.
+2. El valor queda escrito.
+3. El campo se marca en rojo indicando que debe estar entre 1 y 30, y no se registra el prestamo.",,,,2,,Prestamos y devoluciones,,,
+,No se puede prestar un titulo sin ejemplares disponibles,"La interfaz avisa antes de intentar la operacion, y el nodo la rechaza si alguien se adelanto.",Al menos el nodo 1 esta levantado con datos de ejemplo. El titulo elegido tiene cero ejemplares disponibles.,,"RF-06,RNF-02",high,normal,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos y seleccionar ese titulo.
+2. Pulsar 'Registrar prestamo'.","1. Debajo del campo aparece 'Sin ejemplares disponibles en esta sede'.
+2. El campo se marca en rojo y no se registra nada.",,,,2,,Prestamos y devoluciones,,,
+,Una operacion rechazada no deja rastro,Atomicidad de la transaccion. Equivale al caso automatizado PT-06.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,"RNF-02,PT-06",high,blocker,integration,negative,automated,actual,no,e2e,classic,"1. Ejecutar python herramientas/pruebas_transaccionales.py --nodo 1.
+2. Revisar el caso PT-06 en el informe generado.","1. La suite se ejecuta y escribe el informe en docs/evidencias/.
+2. PT-06 aparece como PASA: el inventario queda intacto y no se creo ningun prestamo.",,,,2,,Prestamos y devoluciones,,,
+,Las operaciones invalidas devuelven el codigo de error correcto,Equivale al caso automatizado PT-05.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,"RNF-02,PT-05",medium,normal,integration,negative,automated,actual,no,e2e,classic,"1. Ejecutar la suite de pruebas transaccionales sobre el nodo 1.
+2. Revisar el caso PT-05 en el informe.","1. La suite termina sin excepciones.
+2. Devolver dos veces da FAILED_PRECONDITION, libro o usuario inexistente da NOT_FOUND, y el nodo sigue en pie.",,,,2,,Prestamos y devoluciones,,,
+,Concurrencia sobre el ultimo ejemplar,Varias solicitudes simultaneas no pueden entregar mas ejemplares de los que existen. Equivale al caso automatizado PT-08.,Al menos el nodo 1 esta levantado con datos de ejemplo. Hay un titulo con un solo ejemplar disponible.,,"RNF-02,PT-08",high,blocker,integration,positive,automated,actual,no,e2e,classic,"1. Ejecutar la suite de pruebas transaccionales sobre el nodo 1.
+2. Revisar el caso PT-08 en el informe.","1. La suite lanza las solicitudes sincronizadas con una barrera.
+2. Se acepta exactamente el numero de ejemplares que existian, el resto se rechaza por falta de disponibilidad y ningun ejemplar se entrega dos veces.",,,,2,,Prestamos y devoluciones,,,
+,Devolver dos veces el mismo prestamo se rechaza,Comprobacion manual del mismo comportamiento que verifica PT-05.,Al menos el nodo 1 esta levantado con datos de ejemplo. Existe un prestamo ya devuelto.,,RF-07,medium,normal,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Entrar a Prestamos y seleccionar el lector.
+2. Seleccionar en la tabla el prestamo marcado como DEVUELTO.
+3. Observar el boton de devolucion.","1. Se listan los prestamos del lector.
+2. La fila queda seleccionada.
+3. El boton 'Registrar devolucion' permanece deshabilitado.",,,,2,,Prestamos y devoluciones,,,
+,Los prestamos vencidos quedan senalados,El sistema marca los prestamos cuya fecha de vencimiento ya paso.,Al menos el nodo 1 esta levantado con datos de ejemplo. Existe un prestamo con fecha de vencimiento anterior a hoy. Se puede provocar editando fecha_vencimiento en la tabla Prestamo desde SSMS.,,RF-08,high,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos.
+2. Seleccionar el lector que tiene el prestamo vencido.
+3. Revisar la tabla de la derecha y el resumen del pie.","1. Se muestra el formulario.
+2. Se cargan los prestamos del lector.
+3. La fila del prestamo vencido aparece en rojo con estado VENCIDO y el resumen indica cuantos hay vencidos.",,,,2,,Prestamos y devoluciones,,,
+,Un prestamo se refleja de inmediato en la vista global,Demuestra que la coherencia entre sedes no necesita replicacion. Equivale al caso automatizado PT-02.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-05,RNF-08,PT-02",high,critical,integration,positive,automated,actual,no,e2e,classic,"1. Anotar los disponibles de un titulo en la seccion Catalogo.
+2. Registrar un prestamo de ese titulo en la seccion Prestamos.
+3. Volver a la seccion Catalogo y consultar el mismo titulo.","1. Se anota la cifra inicial.
+2. El prestamo queda registrado.
+3. La cifra de disponibles bajo en uno, sin reiniciar la aplicacion ni sincronizar nada a mano.",,,,2,,Prestamos y devoluciones,,,
+,Listar los lectores de una sede,Cada biblioteca administra su propia tabla de usuarios.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,RF-02,medium,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Usuarios.
+2. Revisar la columna Biblioteca.","1. Se listan los lectores registrados.
+2. Cada fila indica a que sede pertenece el lector.",,,,3,,Usuarios,,,
+,Un lector creado directamente en SQL Server aparece sin reiniciar,Verifica la recarga de datos al navegar entre secciones.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,RF-02,high,normal,regression,positive,is-not-automated,actual,no,e2e,classic,"1. Insertar un lector nuevo en la tabla Usuario de Biblioteca1DB desde SSMS.
+2. En la aplicacion, salir de la seccion Usuarios y volver a entrar.
+3. Entrar a la seccion Prestamos y desplegar la lista de lectores.","1. El registro queda insertado en la base.
+2. El lector nuevo aparece en el listado.
+3. El lector nuevo tambien aparece en la lista desplegable del formulario de prestamo.",,,,3,,Usuarios,,,
+,Los lectores de la sede 3 solo aparecen al elegir la sede 3,Comprueba que la consulta de usuarios viaja con el nodo al que pertenece. Es la regresion del error detectado en la fase anterior.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,RF-02,high,critical,regression,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Prestamos.
+2. Seleccionar la biblioteca 3 en el primer campo.
+3. Desplegar la lista de lectores.","1. Se muestra el formulario.
+2. Se recargan los datos de esa sede.
+3. Aparecen los lectores inscritos en la biblioteca 3, y no los de la biblioteca 1.",,,,3,,Usuarios,,,
+,Buscar un lector por nombre o documento,,Los tres nodos estan levantados y los datos de ejemplo cargados.,,RF-02,low,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Usuarios.
+2. Escribir '1012345678' y pulsar Buscar.","1. Se muestra el listado completo.
+2. Se filtra el listado al lector con ese documento.",,,,3,,Usuarios,,,
+,Una pregunta en lenguaje natural devuelve disponibilidad real,La respuesta se arma solo con datos de los nodos.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RF-09,RNF-03",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Consulta IA.
+2. Escribir '¿Tienen Clean Code?' y pulsar Preguntar.
+3. Contrastar las cifras con la seccion Catalogo.","1. Se muestra la pantalla de consulta.
+2. La respuesta indica en que sedes hay ejemplares y cuantos.
+3. Las cifras coinciden exactamente con las de la seccion Catalogo.",,,,4,,Consulta en lenguaje natural,,,
+,La respuesta advierte que el interprete aun no esta implementado,Honestidad sobre el estado del modulo: no debe presentarse como IA funcionando cuando todavia busca por coincidencia de texto.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,"RF-09,RNF-03",medium,normal,acceptance,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Consulta IA.
+2. Formular cualquier pregunta.","1. Se muestra el aviso informativo sobre el estado del modulo.
+2. La respuesta incluye la nota de que la busqueda es por coincidencia de texto.",,,,4,,Consulta en lenguaje natural,,,
+,Una pregunta sin criterio identificable pide precision,El sistema no debe devolver un resultado aproximado cuando no entendio. Es el criterio del requerimiento RNF-03.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,"RF-09,RNF-03",high,normal,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Consulta IA.
+2. Escribir '¿a que hora cierran?' y pulsar Preguntar.","1. Se muestra la pantalla de consulta.
+2. El sistema informa que no identifico un criterio de busqueda y pide precisar, sin mostrar titulos aproximados.",,,,4,,Consulta en lenguaje natural,,,
+,El sistema sigue operando con un nodo caido,Tolerancia a fallos parciales. Equivale al caso automatizado PT-07.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,"RNF-05,PT-07",high,blocker,integration,positive,automated,actual,no,e2e,classic,"1. Entrar a la seccion Catalogo y pulsar 'Ver todo'.
+2. Detener el servidor del nodo 2.
+3. Esperar unos segundos y volver a pulsar 'Ver todo'.","1. Se listan resultados de las tres sedes.
+2. El servidor se detiene.
+3. Se listan los resultados de las sedes 1 y 3, y la barra inferior indica que el nodo 2 no responde.",,,,5,,Sistema distribuido y tolerancia a fallos,,,
+,El monitor detecta la caida sin cambiar de seccion,El estado de los nodos se actualiza solo cada seis segundos.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,RNF-05,high,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Dejar la aplicacion abierta en la seccion Inicio.
+2. Detener el servidor del nodo 3 desde su terminal.
+3. Esperar sin tocar la aplicacion y observar la barra inferior.","1. Se muestran los tres nodos en linea.
+2. El servidor se detiene.
+3. En menos de diez segundos la barra inferior pasa a indicar 2 de 3 nodos en linea y aparece el aviso del nodo caido.",,,,5,,Sistema distribuido y tolerancia a fallos,,,
+,Un nodo que vuelve reaparece sin reiniciar la aplicacion,"Como no hay replicacion, el nodo que regresa no tiene nada que poner al dia.",La aplicacion esta abierta y el nodo 3 esta detenido.,,RNF-05,high,normal,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Volver a levantar el servidor del nodo 3.
+2. Esperar sin tocar la aplicacion.
+3. Consultar el catalogo.","1. El servidor arranca.
+2. La barra inferior vuelve a indicar 3 de 3 nodos en linea y aparece el aviso correspondiente.
+3. Los titulos de la sede 3 vuelven a aparecer en el resultado.",,,,5,,Sistema distribuido y tolerancia a fallos,,,
+,La consulta distribuida responde en menos de tres segundos,Criterio de aceptacion del requerimiento RNF-04.,Los tres nodos estan levantados y los datos de ejemplo cargados.,,RNF-04,high,normal,performance,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a la seccion Catalogo.
+2. Cronometrar desde que se pulsa 'Ver todo' hasta que la tabla queda cargada.
+3. Repetir la medicion tres veces.","1. La seccion esta disponible.
+2. Se registra el tiempo transcurrido.
+3. Las tres mediciones quedan por debajo de tres segundos.",,,,5,,Sistema distribuido y tolerancia a fallos,,,
+,Sin ningun nodo disponible la aplicacion conmuta a modo demostracion,Permite sustentar aunque falten los servidores.,Ningun servidor de nodo esta levantado.,,RNF-05,medium,normal,acceptance,positive,is-not-automated,actual,no,e2e,classic,"1. Ejecutar python aplicacion.py.
+2. Observar la barra inferior.
+3. Navegar por las secciones.","1. La aplicacion abre sin error.
+2. La barra inferior muestra la etiqueta DEMO y explica que son datos de prueba en memoria.
+3. Todas las secciones funcionan con los datos de ejemplo.",,,,5,,Sistema distribuido y tolerancia a fallos,,,
+,Navegacion entre las cinco secciones,Criterio 2.2 de la entrega: acceso organizado a los modulos.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,RNF-06,high,normal,usability,positive,is-not-automated,actual,no,e2e,classic,"1. Abrir la aplicacion.
+2. Pulsar sucesivamente Inicio, Catalogo, Prestamos, Usuarios y Consulta IA en el menu lateral.
+3. Desde la ultima seccion, volver a Inicio.","1. Se abre en la seccion Inicio con esa opcion marcada.
+2. Cada seccion se muestra y el menu marca la opcion activa con la barra granate.
+3. Se regresa a la pantalla principal.",,,,6,,Interfaz y navegacion,,,
+,Atajos de teclado,,Al menos el nodo 1 esta levantado con datos de ejemplo.,,RNF-06,low,normal,usability,positive,is-not-automated,actual,no,e2e,classic,"1. Pulsar Ctrl+3.
+2. Pulsar Ctrl+1.
+3. Pulsar F5.","1. Se abre la seccion Prestamos.
+2. Se vuelve a la seccion Inicio.
+3. Los datos de la seccion se recargan.",,,,6,,Interfaz y navegacion,,,
+,"Los mensajes distinguen exito, error y advertencia",Criterio 2.1 de la entrega: mensajes claros segun el resultado.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,RNF-06,high,normal,usability,positive,is-not-automated,actual,no,e2e,classic,"1. Registrar un prestamo valido y observar el aviso.
+2. Intentar registrar un prestamo con campos vacios y observar el aviso.
+3. Detener un nodo y observar el aviso.","1. Aparece un aviso verde con el detalle del prestamo.
+2. Aparece un aviso rojo indicando que hay campos sin completar.
+3. Aparece un aviso ambar indicando que el nodo dejo de responder.",,,,6,,Interfaz y navegacion,,,
+,El aviso de exito no desplaza los botones,Regresion del error reportado en la fase anterior: el aviso empujaba los botones fuera de la pantalla.,Al menos el nodo 1 esta levantado con datos de ejemplo.,,RNF-06,medium,normal,regression,positive,is-not-automated,actual,no,e2e,classic,"1. Entrar a Prestamos y registrar un prestamo valido.
+2. Observar la posicion de los botones mientras el aviso esta visible.
+3. Esperar unos segundos.","1. Aparece el aviso de exito flotando en la esquina inferior derecha.
+2. Los botones siguen en su sitio y visibles.
+3. El aviso se retira solo.",,,,6,,Interfaz y navegacion,,,
+,La interfaz se adapta a una pantalla de 1366x768,"Resolucion tipica de portatil, donde antes se cortaba el boton de registrar.",Al menos el nodo 1 esta levantado con datos de ejemplo. La pantalla esta configurada a 1366x768 con escalado al 100 %.,,"RNF-06,RNF-09",high,normal,compatibility,positive,is-not-automated,actual,no,e2e,classic,"1. Abrir la aplicacion.
+2. Recorrer las cinco secciones.
+3. Entrar a Prestamos y buscar el boton 'Registrar prestamo'.","1. La ventana cabe completa en la pantalla.
+2. Ningun texto queda cortado en ninguna seccion.
+3. El boton es visible o se alcanza con la barra de desplazamiento.",,,,6,,Interfaz y navegacion,,,
+,La interfaz se adapta al escalado de Windows al 150 %,Comprueba la conciencia de DPI.,Al menos el nodo 1 esta levantado con datos de ejemplo. El escalado de Windows esta al 150 %.,,"RNF-06,RNF-09",high,normal,compatibility,positive,is-not-automated,actual,no,e2e,classic,"1. Abrir la aplicacion.
+2. Recorrer las cinco secciones.
+3. Revisar los encabezados de las tablas y los botones.","1. La ventana abre con un tamano proporcionado y el texto nitido, no borroso.
+2. Ningun texto queda cortado.
+3. Los encabezados de las tablas se leen completos.",,,,6,,Interfaz y navegacion,,,
+,Instalacion desde cero siguiendo unicamente el README,Criterio de aceptacion del requerimiento RNF-09. Conviene hacerlo en un equipo donde el proyecto nunca se ha ejecutado.,"Equipo con Python 3.10 o superior, SQL Server y el controlador ODBC instalados.",,RNF-09,high,critical,acceptance,positive,is-not-automated,actual,no,e2e,classic,"1. Clonar el repositorio y crear el entorno virtual como indica el README.
+2. Instalar las dependencias y copiar .env.example a .env.
+3. Ejecutar python herramientas/generar_protos.py.
+4. Ejecutar los dos scripts SQL sobre las tres bases.
+5. Levantar un nodo y abrir la aplicacion.","1. El repositorio queda clonado y el entorno creado.
+2. Las dependencias se instalan y el archivo de configuracion queda listo para editar.
+3. Se generan los archivos del contrato gRPC sin error.
+4. Las tres bases quedan creadas con sus ocho tablas y sus datos de prueba.
+5. La aplicacion abre y se conecta al nodo sin pasos adicionales no documentados.",,,,7,,Instalacion y compatibilidad,,,
+,La herramienta de diagnostico orienta cuando la conexion falla,,El archivo .env tiene un nombre de servidor incorrecto a proposito.,,RNF-09,medium,normal,usability,positive,is-not-automated,actual,no,e2e,classic,"1. Ejecutar python herramientas/diagnostico.py.
+2. Leer la salida.","1. La herramienta prueba las combinaciones de controlador y servidor.
+2. Indica cual combinacion funciona y que valores poner en el archivo .env.",,,,7,,Instalacion y compatibilidad,,,
+,Las reglas de negocio no contienen SQL ni referencias al protocolo,"Criterio de aceptacion del requerimiento RNF-07, que se verifica por revision de codigo y no ejecutando la aplicacion.",El repositorio esta clonado.,,RNF-07,medium,normal,other,positive,to-be-automated,actual,no,unit,classic,"1. Buscar SELECT, INSERT, UPDATE y DELETE dentro de la carpeta negocio/.
+2. Buscar las palabras grpc y stub dentro de la carpeta negocio/.
+3. Buscar sentencias SQL dentro de datos/repositorios/.","1. No aparece ninguna sentencia SQL en la capa de negocio.
+2. No aparece ninguna referencia al protocolo en la capa de negocio.
+3. Las sentencias SQL aparecen unicamente en los repositorios.",,,,7,,Instalacion y compatibilidad,,,
+,Los scripts SQL crean las tres bases de datos,"Comprueba que la estructura y los datos de prueba se obtienen solo con SQL, sin ejecutar Python.",SQL Server instalado y sin las bases del proyecto creadas.,,RNF-09,high,normal,acceptance,positive,is-not-automated,actual,no,e2e,classic,"1. Ejecutar SQLQuery_BibliotecasDB.sql tres veces, cambiando el nombre marcado.
+2. Ejecutar SQLQuery_DatosPrueba.sql tres veces, cambiando el nombre y el numero de nodo.
+3. Revisar la consulta de verificacion del final.","1. Quedan creadas Biblioteca1DB, Biblioteca2DB y Biblioteca3DB con ocho tablas cada una.
+2. Cada base queda con sus cinco lectores y su catalogo propio.
+3. El inventario mostrado coincide con el catalogo definido para esa sede.",,,,7,,Instalacion y compatibilidad,,,

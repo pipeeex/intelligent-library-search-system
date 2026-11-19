@@ -152,6 +152,22 @@ python herramientas/probar_nodos.py --titulo "cien"   # disponibilidad agregada
 python herramientas/probar_flujo.py --nodo 1    # ciclo préstamo-devolución end to end
 ```
 
+### Publicar los resultados en la herramienta de gestión
+
+La suite automatizada cubre el comportamiento transaccional; el resto del plan
+de pruebas, incluidos los casos manuales de interfaz y navegación, se gestiona
+en Qase. El script `publicar_en_qase.py` toma el informe más reciente de
+`docs/evidencias/` y sube la ejecución con sus comprobaciones como pasos:
+
+```bash
+python publicar_en_qase.py --simular    # muestra lo que se enviaría
+python publicar_en_qase.py              # publica
+```
+
+Necesita las variables `QASE_TOKEN` y `QASE_PROJECT`, que van en el `.env`
+local y **nunca** en el repositorio. El procedimiento completo está en
+[`docs/pruebas/LEEME.md`](docs/pruebas/LEEME.md).
+
 ---
 
 ## Tecnologías
@@ -254,9 +270,9 @@ Desde el panel de inicio hay accesos directos a las operaciones frecuentes, y se
 | Documento | Contenido |
 |---|---|
 | [`docs/Documento_Maestro_Fase_III.pdf`](docs/Documento_Maestro_Fase_III.pdf) | Documento maestro completo: planteamiento, estado del arte, requerimientos, arquitectura, diagramas UML, modelo relacional, diseño de la red neuronal y gestión del proyecto. |
-| [`docs/CAMBIOS_FASE_III.md`](docs/CAMBIOS_FASE_III.md) | Qué se implementó en esta fase y qué dificultades técnicas hubo que resolver. |
 | [`docs/Arquitectura_por_capas.md`](docs/Arquitectura_por_capas.md) | Detalle de la separación en capas y de la regla de dependencia. |
-| [`docs/Base_de_datos_compartida.md`](docs/Base_de_datos_compartida.md) | Cómo trabajar entre varios equipos: tres opciones con su configuración. |
+| [`docs/Plan_de_pruebas.md`](docs/Plan_de_pruebas.md) | Plan de pruebas: alcance, estrategia, criterios de entrada y salida, gestión de defectos y matriz de trazabilidad. |
+| [`docs/pruebas/`](docs/pruebas/) | Catálogo de los 39 casos de prueba y procedimiento de la herramienta de gestión. |
 | [`docs/capturas/`](docs/capturas/) | Capturas de la interfaz y de las opciones de navegación. |
 | [`docs/evidencias/`](docs/evidencias/) | Informes fechados de la suite de pruebas transaccionales. |
 
