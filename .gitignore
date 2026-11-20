@@ -41,3 +41,8 @@ desktop.ini
 
 # Carpeta de trabajo, no forma parte del proyecto
 Claude outputs/
+
+##docker
+docker-compose.yml
+.dockerignore
+docker/
