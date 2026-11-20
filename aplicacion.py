@@ -24,6 +24,7 @@ from tkinter import ttk
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from negocio.fabrica_ia import crear_servicio_ia  # noqa: E402
 from presentacion.escritorio import estilos as E  # noqa: E402
 from presentacion.escritorio.componentes import Indicador, MarcoDesplazable  # noqa: E402
 from presentacion.escritorio.servicio_cliente import crear_proveedor  # noqa: E402
@@ -66,6 +67,15 @@ class Aplicacion(tk.Tk):
         self.ancho_menu = self._dimensionar_ventana()
 
         self.proveedor, self.aviso_inicial = crear_proveedor(forzar_demo)
+
+        # El modulo de IA se arma una sola vez, no cada vez que se entra
+        # a la pantalla. Si el armado falla, la aplicacion abre igual y la
+        # pantalla de consulta lo informa.
+        try:
+            self.servicio_ia, self.aviso_ia = crear_servicio_ia(self.proveedor)
+        except Exception as exc:  # noqa: BLE001
+            self.servicio_ia = None
+            self.aviso_ia = f"El modulo de IA no se pudo iniciar: {exc}"
         self.vistas: dict[str, ttk.Frame] = {}
         self.contenedores: dict[str, MarcoDesplazable] = {}
         self.botones: dict[str, tk.Frame] = {}
@@ -288,7 +298,8 @@ class Aplicacion(tk.Tk):
                                   al_cambiar_datos=self._datos_cambiaron)
         if clave == "usuarios":
             return VistaUsuarios(maestro, self.proveedor)
-        return VistaConsultaIA(maestro, self.proveedor)
+        return VistaConsultaIA(maestro, self.proveedor, self.servicio_ia,
+                               self.aviso_ia)
 
     def _pintar_menu(self) -> None:
         for clave, marco in self.botones.items():

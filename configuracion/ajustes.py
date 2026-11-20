@@ -148,3 +148,16 @@ def get_todos_los_nodos() -> list[NodoConfig]:
 
 
 DIAS_PRESTAMO = int(os.getenv("DIAS_PRESTAMO", "15"))
+
+# --- Modulo de IA (interprete de lenguaje natural) -----------
+# Endpoint compatible con OpenAI. La URL decide el proveedor:
+#   Gemini  https://generativelanguage.googleapis.com/v1beta/openai
+#   Groq    https://api.groq.com/openai/v1
+#   OpenAI  https://api.openai.com/v1
+IA_BASE_URL = (os.getenv("IA_BASE_URL") or "").rstrip("/")
+IA_MODELO = os.getenv("IA_MODELO", "")
+IA_API_KEY = os.getenv("IA_API_KEY") or ""
+IA_TIMEOUT = int(os.getenv("IA_TIMEOUT", "30"))
+IA_ESFUERZO = (os.getenv("IA_ESFUERZO") or "").strip().lower()
+# El interprete LLM solo se activa si las tres cosas estan puestas.
+IA_HABILITADA = bool(IA_BASE_URL and IA_MODELO and IA_API_KEY)
