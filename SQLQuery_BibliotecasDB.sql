@@ -56,8 +56,8 @@ GO
 
 CREATE TABLE Biblioteca (
     id_biblioteca INT IDENTITY(1,1) NOT NULL,
-    nombre VARCHAR(100) NOT NULL,
-    direccion VARCHAR(200) NOT NULL,
+    nombre NVARCHAR(100) NOT NULL,
+    direccion NVARCHAR(200) NOT NULL,
     estado VARCHAR(20) NOT NULL,
 
     CONSTRAINT PK_Biblioteca
@@ -78,9 +78,9 @@ GO
 CREATE TABLE Libro (
     id_libro INT IDENTITY(1,1) NOT NULL,
     isbn VARCHAR(20) NOT NULL,
-    titulo VARCHAR(200) NOT NULL,
-    autor VARCHAR(150) NOT NULL,
-    editorial VARCHAR(150) NULL,
+    titulo NVARCHAR(200) NOT NULL,
+    autor NVARCHAR(150) NOT NULL,
+    editorial NVARCHAR(150) NULL,
     anio_publicacion INT NULL,
 
     CONSTRAINT PK_Libro
@@ -107,9 +107,9 @@ GO
 
 CREATE TABLE Usuario (
     id_usuario INT IDENTITY(1,1) NOT NULL,
-    nombre VARCHAR(150) NOT NULL,
+    nombre NVARCHAR(150) NOT NULL,
     documento VARCHAR(30) NOT NULL,
-    correo VARCHAR(150) NULL,
+    correo NVARCHAR(150) NULL,
     telefono VARCHAR(30) NULL,
 
     CONSTRAINT PK_Usuario
@@ -220,7 +220,7 @@ CREATE TABLE Devolucion (
     id_devolucion INT IDENTITY(1,1) NOT NULL,
     id_prestamo INT NOT NULL,
     fecha_devolucion DATETIME2 NOT NULL,
-    observacion VARCHAR(300) NULL,
+    observacion NVARCHAR(300) NULL,
 
     CONSTRAINT PK_Devolucion
         PRIMARY KEY (id_devolucion),
@@ -242,7 +242,7 @@ GO
 
 CREATE TABLE Consulta (
     id_consulta INT IDENTITY(1,1) NOT NULL,
-    pregunta VARCHAR(500) NOT NULL,
+    pregunta NVARCHAR(500) NOT NULL,
     fecha_hora DATETIME2 NOT NULL
         CONSTRAINT DF_Consulta_FechaHora
         DEFAULT SYSDATETIME(),
@@ -266,7 +266,7 @@ CREATE TABLE Resultado_Consulta (
     id_biblioteca INT NOT NULL,
     disponibilidad VARCHAR(30) NOT NULL,
     cantidad_disponible INT NOT NULL,
-    mensaje VARCHAR(500) NULL,
+    mensaje NVARCHAR(500) NULL,
 
     CONSTRAINT PK_Resultado_Consulta
         PRIMARY KEY (id_resultado),
