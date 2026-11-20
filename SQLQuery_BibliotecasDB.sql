@@ -31,17 +31,17 @@
    avisa, para no destruir datos de un companero por accidente.
    ============================================================ */
 
-IF DB_ID('Biblioteca1DB') IS NOT NULL      -- <<< CAMBIAR AQUI (1 de 2)
+IF DB_ID('Biblioteca3DB') IS NOT NULL      -- <<< CAMBIAR AQUI (1 de 2)
 BEGIN
     RAISERROR('La base de datos ya existe. Borrala a mano si quieres recrearla.', 16, 1);
     SET NOEXEC ON;
 END;
 GO
 
-CREATE DATABASE Biblioteca1DB;             -- <<< CAMBIAR AQUI (2 de 2)
+CREATE DATABASE Biblioteca3DB;             -- <<< CAMBIAR AQUI (2 de 2)
 GO
 
-USE Biblioteca1DB;                         -- <<< CAMBIAR AQUI (3 de 3)
+USE Biblioteca3DB;                         -- <<< CAMBIAR AQUI (3 de 3)
 GO
 
 PRINT 'Creando la estructura en: ' + DB_NAME();
