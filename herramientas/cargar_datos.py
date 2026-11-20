@@ -44,7 +44,7 @@ DATASET_CSV = Path(__file__).resolve().parent.parent / "datasets" / "libros_open
 # ---------------------------------------------------------------------------
 CATALOGOS_BASE: dict[int, list[tuple]] = {
     1: [
-        ("9780307474728", "Cien anos de soledad", "Gabriel Garcia Marquez", "Vintage", 1967, 3),
+        ("9780307474728", "Cien años de soledad", "Gabriel Garcia Marquez", "Vintage", 1967, 3),
         ("9788437604947", "La ciudad y los perros", "Mario Vargas Llosa", "Catedra", 1963, 2),
         ("9789500720885", "Rayuela", "Julio Cortazar", "Sudamericana", 1963, 2),
         ("9780132350884", "Clean Code", "Robert C. Martin", "Prentice Hall", 2008, 4),
@@ -52,7 +52,7 @@ CATALOGOS_BASE: dict[int, list[tuple]] = {
         ("9781449373320", "Designing Data-Intensive Applications", "Martin Kleppmann", "O'Reilly", 2017, 1),
     ],
     2: [
-        ("9780307474728", "Cien anos de soledad", "Gabriel Garcia Marquez", "Vintage", 1967, 1),
+        ("9780307474728", "Cien años de soledad", "Gabriel Garcia Marquez", "Vintage", 1967, 1),
         ("9788420412146", "El Aleph", "Jorge Luis Borges", "Alianza", 1949, 3),
         ("9788497592208", "Pedro Paramo", "Juan Rulfo", "Catedra", 1955, 2),
         ("9780132350884", "Clean Code", "Robert C. Martin", "Prentice Hall", 2008, 1),
