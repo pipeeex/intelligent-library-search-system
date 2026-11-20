@@ -1,11 +1,3 @@
-"""Widgets reutilizables de la interfaz.
-
-Todos se adaptan al tamano de la ventana y al escalado de la pantalla: las
-tablas reparten el ancho por proporcion en lugar de pixeles fijos, y los textos
-largos recalculan donde cortar el renglon cada vez que la ventana cambia de
-tamano. Esa es la razon por la que antes el texto se veia bien en un monitor y
-recortado en otro.
-"""
 
 from __future__ import annotations
 
@@ -21,11 +13,8 @@ from presentacion.escritorio import estilos as E
 # Texto que se ajusta al ancho disponible
 # ---------------------------------------------------------------------------
 def ajustar_al_ancho(etiqueta: tk.Misc, margen: int = 24) -> None:
-    """Hace que una etiqueta corte el renglon segun el ancho que tenga.
 
-    Sin esto hay que fijar `wraplength` a un numero de pixeles, que acierta en
-    una pantalla y falla en las demas.
-    """
+
     def _recalcular(evento):
         ancho = max(evento.width - E.px(margen), E.px(120))
         try:
@@ -80,12 +69,7 @@ class MarcoDesplazable(ttk.Frame):
         self._sincronizar()
 
     def _sincronizar(self) -> None:
-        """Iguala el ancho al del lienzo y el alto a lo que pide el contenido.
-
-        El alto es el maximo entre lo visible y lo que el contenido necesita:
-        si sobra espacio, los widgets con expand=True se estiran igual que
-        antes; si falta, el area crece y entonces aparece la barra.
-        """
+    
         ancho = self.lienzo.winfo_width()
         alto_visible = self.lienzo.winfo_height()
         if ancho <= 1 or alto_visible <= 1:
@@ -138,12 +122,6 @@ class MarcoDesplazable(ttk.Frame):
 
 
 class FilaFluida(ttk.Frame):
-    """Fila de elementos que pasa al renglon siguiente cuando no caben.
-
-    Se usa para listas cortas de enlaces o etiquetas. Con `pack(side="left")`
-    los ultimos elementos se recortaban en cuanto la fuente crecia por el
-    escalado de la pantalla; aqui se reacomodan solos.
-    """
 
     def __init__(self, maestro, separacion: int = 10, estilo: str = "Tarjeta.TFrame",
                  **kw):
@@ -182,10 +160,6 @@ class FilaFluida(ttk.Frame):
 
 def _ancla_flotante(widget: tk.Misc) -> tk.Misc:
     """Devuelve el marco desplazable que contiene a `widget`, si existe.
-
-    Sirve para que un mensaje flotante quede anclado a lo que se ve y no al
-    contenido, que puede ser mas alto que la ventana: de otro modo el aviso
-    aparecia fuera de la vista y parecia que no se hubiera mostrado.
     """
     actual = widget
     while actual is not None:
@@ -288,10 +262,6 @@ class CampoFormulario(ttk.Frame):
         self.control.pack(anchor="w", pady=(E.px(5), 0),
                           fill="x" if control != "spin" else None)
 
-        # El renglon de error no se reserva de antemano: aparece solo cuando
-        # hay algo que decir. Cuatro renglones vacios sumaban casi 80 px, que
-        # era justo lo que faltaba para que el formulario cupiera en una
-        # pantalla de 768 px de alto.
         self.error = ttk.Label(self, text="", style="Error.TLabel", justify="left")
         ajustar_al_ancho(self.error, margen=E.px(8))
 
@@ -325,12 +295,6 @@ class CampoFormulario(ttk.Frame):
 
 class Tabla(ttk.Frame):
     """Tabla que reparte el ancho disponible entre sus columnas.
-
-    El tercer valor de cada columna ya no es un ancho en pixeles sino un
-    **peso**: cuanto espacio le toca frente a las demas. Al cambiar el tamano
-    de la ventana, o al abrir la aplicacion en una pantalla con otro escalado,
-    las columnas se recalculan solas. Asi ninguna queda tan angosta que corte
-    el texto ni tan ancha que deje un hueco.
     """
 
     def __init__(self, maestro, columnas: list[tuple[str, str, int]],
@@ -340,14 +304,8 @@ class Tabla(ttk.Frame):
         self.pesos = {c[0]: max(int(c[2]), 1) for c in columnas}
         self._ultimo_ancho = 0
 
-        # `alto` es el numero de filas deseado, no un minimo rigido. En una
-        # pantalla baja se pide menos para que la tarjeta entera quepa; como
-        # las vistas empaquetan la tabla con expand=True, en un monitor grande
-        # crece igual hasta llenar el espacio libre.
         filas = alto
         try:
-            # Alto util en medidas de diseno: una pantalla de 768 px con el
-            # texto al 125 % equivale a 614, y ahi caben menos filas.
             util = maestro.winfo_screenheight() / max(E.FACTOR, 1.0)
             if util < 800:
                 filas = min(alto, 7)
@@ -359,8 +317,6 @@ class Tabla(ttk.Frame):
         self.arbol = ttk.Treeview(self, columns=self.claves, show="headings",
                                   height=filas, selectmode="browse")
 
-        # Medimos el encabezado con la fuente real: asi el minimo de cada
-        # columna depende del texto y del escalado, no de un calculo a ojo.
         try:
             medidor = tkfont.Font(root=maestro,
                                   font=E.fuente(E.TAM_CUERPO, negrita=True))
@@ -430,9 +386,6 @@ class Tabla(ttk.Frame):
 
 class Aviso(tk.Frame):
     """Mensaje flotante que se superpone a la vista y se va solo.
-
-    Va con `place`, no con `pack`, para que al aparecer no empuje el contenido
-    ni desplace los botones fuera de la pantalla.
     """
 
     DURACION = {"ok": 5000, "info": 7000, "aviso": 8000, "error": 9000}

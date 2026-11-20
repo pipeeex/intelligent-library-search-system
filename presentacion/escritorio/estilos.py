@@ -70,11 +70,7 @@ FACTOR = 1.0
 # Escalado
 # ---------------------------------------------------------------------------
 def activar_dpi() -> None:
-    """Declara la aplicacion consciente del DPI. Llamar ANTES de crear la ventana.
 
-    Sin esto, Windows amplia la ventana como si fuera una imagen cuando el
-    escalado del sistema no es 100 %: se ve borrosa y los textos se recortan.
-    """
     try:
         import ctypes
         try:
@@ -88,7 +84,6 @@ def activar_dpi() -> None:
 
 
 def configurar_escalado(root: tk.Misc) -> float:
-    """Ajusta Tk al DPI real de la pantalla y devuelve el factor de escala."""
     global FACTOR
     try:
         ppp = float(root.winfo_fpixels("1i"))
@@ -97,8 +92,6 @@ def configurar_escalado(root: tk.Misc) -> float:
     if ppp <= 0:
         ppp = 96.0
 
-    # Tk convierte puntos a pixeles con este factor: asi las fuentes declaradas
-    # en puntos ocupan el tamano fisico correcto en cualquier pantalla.
     try:
         root.tk.call("tk", "scaling", ppp / 72.0)
     except Exception:
@@ -109,7 +102,6 @@ def configurar_escalado(root: tk.Misc) -> float:
 
 
 def px(n: float) -> int:
-    """Convierte una medida del diseno (pensada a 96 ppp) a pixeles reales."""
     return int(round(n * FACTOR))
 
 

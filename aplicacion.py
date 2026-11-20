@@ -87,15 +87,11 @@ class Aplicacion(tk.Tk):
     # Geometria
     # ------------------------------------------------------------------
     def _dimensionar_ventana(self) -> int:
-        """Elige tamano, minimos y posicion segun el monitor. Devuelve el ancho del menu.
+        """
 
         Reglas:
         * la ventana ocupa como maximo el 92 % del escritorio, para que nunca
           nazca mas grande que la pantalla (el caso que recortaba los textos);
-        * en pantallas con menos de 1200 px utiles arranca maximizada y el menu
-          se vuelve estrecho;
-        * el minimo tambien se limita al escritorio: un minsize mayor que la
-          pantalla impide reducir la ventana y vuelve a cortar el contenido.
         """
         pantalla_ancho = self.winfo_screenwidth()
         pantalla_alto = self.winfo_screenheight()
